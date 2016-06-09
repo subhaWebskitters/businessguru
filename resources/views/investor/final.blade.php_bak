@@ -1,0 +1,19 @@
+@extends('app')
+@section('content')
+<div class="upper_tab" style="display:none">
+		<ul>
+				<li class="basic_tab">BASICS</li>
+				<li class="portfolio_tab">PORTFOLIO</li>
+				<li class="funds_tab">FUNDS</li>
+		</ul>
+</div>
+@if(Session::has('succmsg'))
+    <div class="alert alert-success"><strong>Well done!</strong> {{ Session::get('succmsg') }}</div>
+@endif
+<div class="formRow" id="form_completion">
+		<div class="form_sep">
+				<label class="req"><b>Thank you for submitting your application. We will get in touch with you within 3 working days.</b></label>
+				<span>&nbsp;</span>
+		</div>
+</div>
+@endsection

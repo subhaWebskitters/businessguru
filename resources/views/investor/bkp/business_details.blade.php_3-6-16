@@ -1,0 +1,153 @@
+@extends('masterLayout')
+@section('content')	
+  <div id="main" class="clear inv_details">
+    <div class="main_container">
+      <div class="inv_inner">
+	<h2>{{$businessDetails->business_name}}<span>by {{$investor_name}} </span></h2>
+	<div class="deatils_outer clear">
+	  <div class="summary">
+	    <div class="border_box">
+	      <h3>Summary:</h3>
+	      <p>{{$businessDetails->business_description}}</p>
+	    </div>
+	    <div class="border_box upload_img clear">
+	      <h3>Upload Video and Photo:</h3>
+		<form enctype="multipart/form-data" action="" method="post" class="putImages" id="formId">
+								<input type="hidden" name="_token" value="{{ csrf_token() }}">
+								<input type="hidden" name="action" value="Process">
+								<label>Upload Multiple Image(Max 5)</label> 
+								<input name="media[]" type="file" id="media" multiple/>
+								<div id="image-holder"></div>
+								<div id="imgmsgdiv" style="color:red;"></div>
+								<div id="loader" style="display:none;"><img src="{{asset('front_assets/img/ajax-loader.gif')}}"></div> 
+								<input class="button" type="submit" alt="Upload" value="Upload" />
+						</form>
+	      <ul>
+		<li><img src="images/img17.jpg" alt="no img"></li>
+		<li><img src="images/img18.jpg" alt="no img"></li>
+		<li><img src="images/img19.jpg" alt="no img"></li>
+	      </ul>
+	    </div>
+	    <div class="border_box">
+	      <h3>Company Portfolio</h3>
+	      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining </p>
+	    </div>
+	    <div class="border_box">
+	      <h3>Director's BIO</h3>
+	      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining </p>
+	    </div>
+	    <div class="border_box">
+	      <h3>Proposal</h3>
+	      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+	      <div class="want_to">
+		<div class="want_to_inner want_to_inner2">
+		  <img src="{{ asset('front_assets/assets/images/icon21.png') }}">
+		  <span class="blue">Want to view the proposal?</span>
+		  <span>Register you interest and will contact <br> you within 24 hours</span>
+		  <a href="#" class="sign_up1">Register</a>
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="looking">
+	    <div class="border_box">
+	      <h3>Looking For</h3>
+	      <div class="selling">
+		<h4>Selling/Investment</h4>
+		<span class="line">{{$businessDetails->getspCurrency->country_currency_symbol}}{{$businessDetails->selling_price}}</span>
+		<span>{{$businessDetails->equity_exchange."%"}}</span>
+	      </div>
+	      <a href="#" class="interest">I am Interested</a>
+	      <a href="{{URL('getDownload')}}" class="download">Download sales report</a>
+	      
+	    </div>
+	    
+	    <div class="border_box">
+	      <div class="company_name">
+		<div class="company_img">{{ Html::image(asset('upload/businessuser/'.$businessDetails->business_logo),$businessDetails->business_logo) }}</div>
+		<span>{{$businessDetails->business_name}}</span>
+		<span>{{$businessDetails->acta_number}}<br> {{$businessDetails->number_of_year}}<br>
+		{{$indus_name}}												
+		</span>
+		<a href="{{$businessDetails->website}}">{{$businessDetails->website}}</a>
+	      </div>
+
+	    </div>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+						$("input[type='file']").change(function () {
+								var countfileno = $(this)[0].files.length;
+								
+								if (countfileno <= 5) {
+										var imgPath = $(this)[0].value;
+										var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+										var image_holder = $("#image-holder");
+										image_holder.empty();
+										if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+												if (typeof(FileReader) != "undefined") {
+														for (var i = 0; i < countfileno; i++){
+																var reader = new FileReader();
+																reader.onload = function(e) {
+																		$("<img />", {
+																				"src": e.target.result,
+																				"class": "thumb-image"
+																		}).appendTo(image_holder);
+																}
+																image_holder.show();
+																reader.readAsDataURL($(this)[0].files[i]);
+														}
+												}
+												else{
+														alert("This browser does not support FileReader.");
+												}
+										}
+										else{
+												alert("Pls select only images");
+										}
+								
+										$("#imgmsgdiv").html("");
+										$('#formId').submit(function( e ) { 
+												var base_url_suffix	= '';
+												var base_url = location.protocol + '//' + location.host + '/' + base_url_suffix;
+												//var csrf_token = $('meta[name="csrf-token"]').attr('content'); 
+												var FormSubmitUrl= base_url + 'uploadimage'; 
+												$.ajax({
+														url: FormSubmitUrl,
+														type: 'POST',
+														data: new FormData(this),
+														processData: false,
+														contentType: false,
+														beforeSend: function() {
+																$("#loader").css('display','block');
+														},
+														success: function (response) { 
+																if (response == 'ok') {
+																		$('#imgmsgdiv').html("upload Successfull"); 
+																		$("#loader").css('display','none');
+																		$("#image-holder").hide();
+																		$("#image-holder").html("");
+																		$("#media").val("");
+																		setTimeout(function(){ $('#imgmsgdiv').html(""); }, 7000); 
+																}
+														}
+												});
+												e.preventDefault();
+										});
+								}
+								else{
+										$("#imgmsgdiv").html("Upload only 5 files");
+										$("#image-holder").hide();
+										$("#media").val('');
+								}
+						});
+				</script>
+
+
+
+@endsection
+	
