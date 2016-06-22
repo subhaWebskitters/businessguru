@@ -10,7 +10,7 @@ use Illuminate\Cookie\CookieServiceProvider;
 use Hash;
 use App\Http\Helpers;
 use \Auth, \Mail;
-use App\tmpInvestors,App\investors,App\industries,App\interests,App\InvestorIndustries, App\Business, App\Businessfiles, App\Sitesettings, App\BusinessProposal, App\BusinessInterestMail;
+use App\tmpInvestors,App\investors,App\industries,App\interests,App\InvestorIndustries, App\Business, App\Businessfiles, App\Sitesettings, App\BusinessProposal, App\BusinessInterestMail, App\Currencies;
 
 use Intervention\Image\Facades\Image as Image;
 use Illuminate\Support\Facades\Input;
@@ -24,12 +24,11 @@ class InvesterController extends Controller
 
         $Investors          = new investors();
         $email              = $request->email; 
+        $data['currency']   = Currencies::lists('country_currency_symbol','id')->all();
         
-        //dd($request);
+        $emailExists = $this->investoremailunique($email);
         
-        $emailExists = $this->investor_email_unique($email);
-        
-        if($emailExists){
+        if($emailExists > 0){
             return Redirect::route('save_invester_step')->with('errmsg','Email Already exists');
         }
         else{
@@ -44,8 +43,10 @@ class InvesterController extends Controller
             $annual_salary      = $request->annual_salary; 
             $willing_to_invest  = $request->willing_to_invest; 
             $industry_status    = $request->industry_status;
-            
+            //$as_currency        = $request->as_currency;
+            //$wi_currency        = $request->wi_currency;
             $image_file         = $request->image;
+
         
             if($image_file){
                 $extension = $image_file->getClientOriginalExtension();
@@ -86,9 +87,13 @@ class InvesterController extends Controller
             $Investors->about_company       = $about_company;
             $Investors->annual_salary       = $annual_salary;
             $Investors->willing_to_invest   = $willing_to_invest;
+            //$Investors->as_currency         = $as_currency;
+            //$Investors->wi_currency         = $wi_currency;
             
             $Investors->save();         
             $inserted_id = $Investors->id; 
+        
+            
         
         
             for($i=0;$i<count($industry_status);$i++){
@@ -122,16 +127,24 @@ class InvesterController extends Controller
     
     
     public function signup_basic(Request $request){  
-        $data                = array();
-        $data['industries']  = industries::where('status','Active')->orderBy('industry_name')->lists('industry_name', 'id');
-        $data['interests']   = interests::where('status','Active')->orderBy('interest_name')->lists('interest_name', 'id');
-        if($request->action == 'Process')
-        {
-                            $data['email']                  = $request->email;
-                            $data['password']               = $request->password;
-                         
-             return view('investor.signup',$data);
+        $data                   = array();
+        $data['industries']     = industries::where('status','Active')->orderBy('industry_name')->lists('industry_name', 'id');
+        $data['interests']      = interests::where('status','Active')->orderBy('interest_name')->lists('interest_name', 'id');
+        $data['currency']       = Currencies::lists('country_currency_symbol','id')->all();
+        $data['email'] = '';
+        $data['password'] = '';
+        //dd($data['industries']);
+        
+        if($request->action == 'Process'){
+            $data['email']      = $request->email_investor;
+            $data['password']   = $request->password_investor;              
+            return view('investor.signup',$data);
         }
+    }
+    
+    public function investoremailunique($email){
+        $investor   = investors::where("email",$email)->first();
+        return count($investor);
     }
     
     public function send_otp(Request $request){
@@ -141,7 +154,7 @@ class InvesterController extends Controller
         
         $response = Twilio::message('+'.$contact_no, 'Your OTP is '.$otp_value);
         if(isset($response->sid) && $response->sid != '')
-            echo $otp_value;
+            echo base64_encode($otp_value);
         else
             echo 0;
             
@@ -151,11 +164,10 @@ class InvesterController extends Controller
     public function verify_otp(Request $request){
         $otp_value      = $request->otp_value;
         $investor_id    = $request->investor_id;
-        $investor           = tmpInvestors::where("id","=",$investor_id)
+        $investor       = tmpInvestors::where("id","=",$investor_id)
         ->where('verified','=','No')
         ->first();
-        if(isset($investor->otp_value) && $investor->otp_value == $otp_value)
-        {
+        if(isset($investor->otp_value) && $investor->otp_value == $otp_value){
             $investor->otp_value = '';
             $investor->verified  = 'Yes';
             $investor->save();
@@ -169,15 +181,18 @@ class InvesterController extends Controller
         }
     }
     
-    public function business_email_unique(Request $request){
-        $email      = $request->email;
-        $investor   = investors::where("email","=",$email)->first();
-        return count($investor);
-    }
-    public function investor_email_unique($email){
-        //$email      = $request->email;
-        $investor   = investors::where("email","=",$email)->first();
-        return count($investor);
+    
+    
+    public function invester_email_unique(Request $request){
+        
+        $email      = $request->email_investor;
+        $investor   = investors::where("email",$email)->first();
+        if($investor){
+            exit;
+        }
+        echo 'true';
+        exit;
+        //return count($investor);
     }
     
     public function signin(Request $request){
@@ -201,11 +216,10 @@ class InvesterController extends Controller
                 $email = $request->email;
                 $password = $request->password;
                 
-                $emailExists = $this->investor_email_unique($email);
-                $userDetails = investors::where("email","=",$email)->first();
+                $emailExists = $this->investoremailunique($email);
+                $userDetails = investors::where("email","=",$email)->where('status','Active')->first();
                 
-                if($emailExists)
-                {
+                if(count($userDetails)> 0){
                     $auth = auth()->guard('investors');
                     $userdata = array('email' => $email, 'password' => $password);
                         
@@ -255,6 +269,9 @@ class InvesterController extends Controller
             $investor_name = Session::get('INVESTORS_NAME');
             $investor = investors::find($investor_id);
             
+            $search_word            = $request->search;
+            $data['search_word']    = $search_word;
+            
             //$industryData = investors::join('investor_industries', 'investor_industries.investor_id', '=', 'investors.id')
             //                            ->join('industries', 'investor_industries.industry_id', '=', 'industries.id')
             //                            ->where('investors.id',$investor_id)
@@ -268,6 +285,11 @@ class InvesterController extends Controller
                                         ->join('business_industries', 'investor_industries.industry_id', '=', 'business_industries.industry_id')
                                         ->join('business_users', 'business_industries.business_id', '=', 'business_users.id')
                                         ->where('investors.id',$investor_id)
+                                        ->where(function($query) use ($data){
+                                            if($data['search_word'] != ''){
+                                                $query->where('business_name','LIKE','%'.$data['search_word'].'%');
+                                            }
+                                        })
                                         ->select('investors.*','business_users.*','investors.id as investor_id','business_users.id as business_id','investor_industries.investor_id','investor_industries.industry_id','industries.industry_name','business_users.created_at as listed_date')
                                         ->addSelect(\DB::Raw("GROUP_CONCAT(is_industries.industry_name) as category_list"))
                                         ->orderBy('business_users.last_view','DESC')
@@ -277,13 +299,18 @@ class InvesterController extends Controller
             
             
                                         
-             $allindustryData = industries::orderBy('id','ASC')->get();                             
+            $allindustryData = industries::orderBy('id','ASC')->get();                             
                          
             $businessData = investors::join('investor_industries', 'investor_industries.investor_id', '=', 'investors.id')
                                         ->join('industries', 'investor_industries.industry_id', '=', 'industries.id')
                                         ->join('business_industries', 'investor_industries.industry_id', '=', 'business_industries.industry_id')
                                         ->join('business_users', 'business_industries.business_id', '=', 'business_users.id')
                                         ->where('investors.id',$investor_id)
+                                        ->where(function($query) use ($data){
+                                            if($data['search_word'] != ''){
+                                                $query->where('business_name','LIKE','%'.$data['search_word'].'%');
+                                            }
+                                        })
                                         ->select('investors.*','business_users.*','investors.id as investor_id','business_users.id as business_id','investor_industries.investor_id','investor_industries.industry_id','industries.industry_name','business_users.created_at as listed_date')
                                         ->addSelect(\DB::Raw("GROUP_CONCAT(is_industries.industry_name) as category_list"))
                                         ->orderBy('industries.id','ASC')
@@ -352,6 +379,14 @@ class InvesterController extends Controller
         //$businessDetails = Business::join('business_industries', 'business_industries.business_id', '=', 'business_users.id')
         //                            ->where('business_users.id',$business_id)
         //                            ->get();
+        
+        
+        $investor_id = Session::get('INVESTORS_ID'); 
+				if( !$investor_id || empty($investor_id) ){ 
+						return redirect('/');
+				}
+        
+        
         $industry = array();
         $data = array();
             $business                        = Business::where('business_slug',$business_slug)->first();
@@ -360,6 +395,96 @@ class InvesterController extends Controller
             $business->total_views           = $business->total_views + 1;
             $business->save();
 
+       
+        $proposalresult= BusinessProposal::where('status','Approval')->where('business_id',$business_id)->get();
+        
+        
+        if(count($proposalresult)> 0){
+            $chartResult= BusinessProposal::join('investors','investors.id','=','business_proposals.investor_id')
+                                            ->join('business_users','business_users.id','=','business_proposals.business_id')
+                                            ->where('business_proposals.status','Approval')
+                                            ->where('business_proposals.business_id',$business_id)
+                                            ->select('investors.*','business_users.*','investors.id as InvestorID','investors.name as InvestorName','business_users.id as BusinessID')
+                                            ->get();
+        }
+        else{
+            $chartResult = array();
+        }
+        
+        //$chartResult = array();
+        $total = 0;
+        $price = 0;
+        
+        $data['chartResult'] = count($chartResult);
+        
+        if(count($chartResult)>0){
+            $x=0;
+            foreach($chartResult as $cr){
+                
+                $reasons = \Lava::DataTable();
+                if($cr->looking_for == "Investors"){
+                    $funds_required = $cr->funds_required;  
+                }
+                elseif($cr->looking_for == "Selling Your Company"){
+                    $funds_required = $cr->selling_price;  
+                }
+                $willingtoamountrange = explode("-",$cr->willing_to_invest);
+                $willingtoamount['investor'][$x]['amount'] =  $willingtoamountrange[0];
+                $willingtoamount['investor'][$x]['name']=  $cr->InvestorName; 
+                
+                $x++;
+            }
+        
+            for($i=0;$i<count($willingtoamount['investor']);$i++){
+                $total = $total + $willingtoamount['investor'][$i]['amount'];
+                $price = $total;
+            }
+            
+            if($price < $funds_required){
+                $fund_price = $funds_required - $price; 
+                
+                $reasons->addStringColumn('Reasons')->addNumberColumn('percent');
+                if($fund_price > 0){
+                   $reasons->addRow(['Remaining Investment', (int)$fund_price]);
+                }
+                
+                
+                
+               // for($i=0;$i<count($willingtoamount['investor']);$i++){
+                    //$total = $total + $willingtoamount['investor'][$i]['amount'];
+                    //$price = $total;
+                    
+                    $reasons->addRow(['Total Investment',(int)$price]);    
+               // }
+            }
+            else{
+                $reasons->addStringColumn('Reasons')->addNumberColumn('percent');
+                
+                $reasons->addRow(['Total Investment', (int)$price]);
+                
+                
+                //for($i=0;$i<count($willingtoamount['investor']);$i++){
+                //    $reasons->addRow([$willingtoamount['investor'][$i]['name'],(int)$willingtoamount['investor'][$i]['amount']]);    
+                //}
+            }
+        
+            \Lava::PieChart('IMDB', $reasons,[
+                                                'pieSliceText' => 'value',
+                                                'title'  => '',
+                                                'is3D'   => true,
+                                                'slices' => array( 0 => array('color' => 'green'),1 => array('color' => 'red')),
+                                                
+                                            ]);    
+        }
+        
+       
+        
+       
+       
+       
+       
+       
+       
         $investor_id = Session::get('INVESTORS_ID'); 
 //				if( !$investor_id || empty($investor_id) ){ 
 //						return redirect('/');
@@ -538,8 +663,14 @@ class InvesterController extends Controller
     
     public function changepassword(){ 
         $data= array();
-        Session::get('INVESTORS_ID');
-        return view('investor.changepassword',$data);
+        
+        $investor_id = Session::get('INVESTORS_ID'); 
+				if( !$investor_id || empty($investor_id) ){ 
+						return redirect('/');
+				}
+        else{
+            return view('investor.changepassword',$data);    
+        }
     }
     
     public function do_changepassword(Request $request){ 
@@ -550,7 +681,7 @@ class InvesterController extends Controller
             $validator = Validator::make(
                                             $request->all(),
                                             [
-                //                                'password'         => 'required|min:8|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/|
+                //                          'password'=>                       'required|min:8|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/|
                 //confirmed',
                                                 'old_password' => 'required',
                                                 'password' => 'required|min:6',
@@ -566,18 +697,14 @@ class InvesterController extends Controller
                 $id                          = $investors_id; 
                 $Investors                   = investors::find($id);
                 //dd($Investors->password);
-                if (Hash::check($request->old_password, $Investors->password))
-                {
-                    $Investors->password         = $request->password;
+                if (Hash::check($request->old_password, $Investors->password)){
+                    $Investors->password    = $request->password;
                     $Investors->save();
                     return Redirect::route('changepassword')->with('succmsg','Password changed Successfully!');
                 }
-                else
-                {
+                else{
                     return Redirect::route('changepassword')->with('errmsg','Old Password does not matched!');
                 }
-                
-                
             }
         }
         return view('investor.changepassword',$data);
@@ -682,6 +809,7 @@ class InvesterController extends Controller
                 echo 2; exit;
               }
     }
+    
     public function view_proposal_mail(Request $request){
         $sitesettings = Sitesettings::select('sitesettings_name','sitesettings_value')->where('id',1)->first();
         $data['contact_from_name'] = $request->name;
@@ -690,15 +818,32 @@ class InvesterController extends Controller
         $data['buss_name'] = $request->buss_name;
         $investor_id = Session::get('INVESTORS_ID');
         $buss_id = $request->buss_id;
+        $investor_type = $request->investor_type;
         //dd($data);
-        $bussProposalExists= BusinessProposal::where('business_id',$buss_id)->where('investor_id',$investor_id)->first();
+        if($investor_type == 'Single Investors')
+        {
+            $bussProposalForSingleInvestor = BusinessProposal::where('business_id',$buss_id)->where('status','!=','Approval')->first();
+            if(count($bussProposalForSingleInvestor) == 0)
+            {
+                 $bussProposalExists= BusinessProposal::where('business_id',$buss_id)->where('investor_id',$investor_id)->first();
+        $bussProposalDeclineExists= BusinessProposal::where('business_id',$buss_id)->where('investor_id',$investor_id)->where('status','Declained')->first();
         
-              if(count($bussProposalExists) == 0){
+              if(count($bussProposalExists) == 0 || count($bussProposalDeclineExists) == 1){
+               if(count($bussProposalExists) == 0)
+               {
                 $BusinessProposal          = new BusinessProposal();
                 $BusinessProposal->business_id       = $buss_id;
                 $BusinessProposal->investor_id       = $investor_id;
                 $BusinessProposal->status            = 'Requested';
                 $BusinessProposal->save();
+               }
+               else if(count($bussProposalDeclineExists) == 1)
+               {
+                $id = $bussProposalDeclineExists->id;
+                $BusinessProposal            = BusinessProposal::find($id);
+                $BusinessProposal->status            = 'Requested';
+                $BusinessProposal->save();
+               }
                 $mail_config = array(
                 'from_mail'  	=> $request->email,
                 'from_name'  	=> $request->name,
@@ -726,6 +871,61 @@ class InvesterController extends Controller
               {
                 echo 2; exit;
               }
+            }
+            else
+            {
+                echo 3; exit;
+            }
+        }
+        else if($investor_type == 'Multiple Investors')
+        {
+        $bussProposalExists= BusinessProposal::where('business_id',$buss_id)->where('investor_id',$investor_id)->first();
+        $bussProposalDeclineExists= BusinessProposal::where('business_id',$buss_id)->where('investor_id',$investor_id)->where('status','Declained')->first();
+        
+              if(count($bussProposalExists) == 0 || count($bussProposalDeclineExists) == 1){
+               if(count($bussProposalExists) == 0)
+               {
+                $BusinessProposal          = new BusinessProposal();
+                $BusinessProposal->business_id       = $buss_id;
+                $BusinessProposal->investor_id       = $investor_id;
+                $BusinessProposal->status            = 'Requested';
+                $BusinessProposal->save();
+               }
+               else if(count($bussProposalDeclineExists) == 1)
+               {
+                $id = $bussProposalDeclineExists->id;
+                $BusinessProposal            = BusinessProposal::find($id);
+                $BusinessProposal->status            = 'Requested';
+                $BusinessProposal->save();
+               }
+                $mail_config = array(
+                'from_mail'  	=> $request->email,
+                'from_name'  	=> $request->name,
+                'to_mail'       => $sitesettings['sitesettings_value']
+            );
+            $is_mail = \Mail::send('emails.admin_view_proposal', $data, function($message) use ($mail_config){
+                $message->subject("Proposal Request");
+                $message->from($mail_config['from_mail']);
+                $message->to($mail_config['to_mail']);
+            });
+            $mail_config1 = array(
+                                        'from_mail'  	=> $sitesettings['sitesettings_value'],
+                                        'from_name'  	=> $sitesettings['sitesettings_name'],
+                                        'to_mail'       => $request->email
+                                    );
+                                    \Mail::send('emails.view_proposal_user', $data, function($message) use ($mail_config1){
+                                        $message->subject("Proposal Request");
+                                        $message->from($mail_config1['from_mail']);
+                                        $message->to($mail_config1['to_mail']);
+                                    });
+             
+              echo $is_mail; exit;
+              }
+              else
+              {
+                echo 2; exit;
+              }
+        }
               
             
     }
@@ -757,7 +957,7 @@ class InvesterController extends Controller
                                         ->where('investors.id',$investor_id)
                                         ->select('investors.*','business_users.*','investors.id as investor_id','business_users.id as business_id','investor_industries.investor_id','investor_industries.industry_id','industries.industry_name','business_users.created_at as listed_date')
                                         ->addSelect(\DB::Raw("GROUP_CONCAT(is_industries.industry_name) as category_list"))
-                                        ->orderBy('business_users.last_view','DESC')
+                                        ->orderBy('business_users.id','DESC')
                                         ->groupBy('business_users.id')
                                         ->paginate(10);
                                     

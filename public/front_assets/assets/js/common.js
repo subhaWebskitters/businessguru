@@ -170,7 +170,7 @@ $(document).ready(function(){
 								
 								var threshold5       = 0.9
 								,   positionCurrent5 = scrollbarData5.contentPosition + scrollbarData5.viewportSize
-								,   positionEnd3     = scrollbarData5.contentSize * threshold5
+								,   positionEnd5     = scrollbarData5.contentSize * threshold5
 								;
 
 								// Check if have reached the "end" and that we arent allready in the process of loading new data.
@@ -578,6 +578,10 @@ $(document).ready(function(){
 
 		/* Click on Category / Industry Dasboard Page Icons */
 		$('.catIndustry').click(function(){
+		    $( ".industryList li" ).each(function() {
+			$( this ).removeClass( "activeIndustry" );
+		      });
+		    $(this).parents('li').addClass('activeIndustry');
 		    var min_price	= parseInt(0);
 		    var max_price	= parseInt($('#max_price').val());
 		    var search_text	= '';
@@ -589,7 +593,10 @@ $(document).ready(function(){
 		
 		/* Click on Category / Discover Page Icons */
 		$('.discoverCat').click(function(){
-		    
+		    $( ".industryList li" ).each(function() {
+			$( this ).removeClass( "activeIndustry" );
+		      });
+		    $(this).parents('li').addClass('activeIndustry');
 		    var catId 		= $(this).attr('item');
 		    getDiscoverPageBusinessSearchCat(catId);
 		})
@@ -627,8 +634,14 @@ $(document).ready(function(){
 						url: url,
 						data: {'_token': token,'indID': catId},
 						async: false,
-						success: function(response){ 
-								$('#blogdiscover').html(response);
+						success: function(response){
+						    if (response != '') {
+							$('#blogdiscover').html(response);
+						    }
+						    else
+						    {
+							$('#blogdiscover').html('No Business Listing found in this category.').css('color','#333');
+						    }
 						}
 				});
 		}
@@ -636,10 +649,7 @@ $(document).ready(function(){
 		
 		$('#search_text').on('blur',function(){
 				
-				alert($('#search_text').val());
 				var search_text = $('#search_text').val();
-				
-				
 				var industries = new Array();
 				var i=0;
 				$('.industryChoose').each(function(){    

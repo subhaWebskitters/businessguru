@@ -118,13 +118,17 @@
 			  <div class="one_tab_inner">
 			    <div>
 				
-				<?php echo Form::file('image',array('id'=>'image','class'=>'form-control demoInputBox')); ?>
+				<?php echo Form::file('image', array('id'=>'image','class'=>'form-control demoInputBox')); ?>
 
 				<span id="file_error"></span>
-				<br>
-				<div class="image-display">
-				<?php echo e(Html::image(asset('upload/Investor/thumb/'.$investor_details->image),$investor_details->image,array())); ?>
+				<div class="image-display" id="imageHolder">
+				  <?php if($investor_details->image != '' && file_exists(public_path().'/upload/Investor/thumb/'.$investor_details->image)): ?>
+				<?php echo e(Html::image(asset('upload/Investor/thumb/'.$investor_details->image),$investor_details->image)); ?>
 
+			    <?php else: ?>
+				<?php echo e(Html::image(asset('upload/no-img.png'),'no-img')); ?>
+
+			    <?php endif; ?>
 				</div>
 			    </div>
 				     

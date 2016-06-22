@@ -45,7 +45,7 @@
 														</div>
 												</div>
 										
-												<?php if($details->user_type == 'Start Up' || $details->user_type == 'Businees Ideas Only'): ?>
+												
 														<div class="form-body pal">
 																<div class="form-group">
 																		<label class="col-md-3 control-label" for="inputName">Business Name</label>
@@ -75,9 +75,10 @@
 																		<?php endif; ?>
 																</div>
 														</div>
+						<?php if($details->user_type == 'Start Up'|| $details->user_type == 'Existing Business'): ?>
 														<div class="form-body pal">
 																<div class="form-group">
-																		<label class="col-md-3 control-label" for="inputName">ACTA Number</label>
+																		<label class="col-md-3 control-label" for="inputName">ACRA Number</label>
 																		<div class="col-md-9">
 																				<div class="input-icon right">
 																						<?php echo Form::text('acta_number',$details->acta_number,array('class'=>'form-control','readonly' )); ?>
@@ -97,6 +98,8 @@
 																		</div>
 																</div>
 														</div>
+														<?php endif; ?>
+										<?php if(isset($details->registered_address) && $details->registered_address != ''): ?>
 														<div class="form-body pal">
 																<div class="form-group">
 																		<label class="col-md-3 control-label" for="inputName">Address</label>
@@ -108,6 +111,7 @@
 																		</div>
 																</div>
 														</div>
+														<?php endif; ?>
 														<div class="form-body pal">
 																<div class="form-group">
 																		<label class="col-md-3 control-label" for="inputName">Business Logo</label>
@@ -123,18 +127,25 @@
 																				</div>
 																		</div>
 																</div>
-														</div>	
+														</div>
+																
+				<?php if(COUNT($details->business_details)>0): ?>
 														<div class="form-body pal">
 																<div class="form-group">
-																		<label class="col-md-3 control-label" for="inputName">Director Name</label>
-																		<div class="col-md-9">
+																		<label class="col-md-3 control-label" for="inputName">Director Name</label>					
+			
+					<div class="col-md-9">
 																				<div class="input-icon right">
-																						<?php echo Form::text('name_of_director',$details->name_of_director,array('class'=>'form-control','readonly' )); ?>
+					<?php foreach($details->business_details as $v): ?>																	<?php echo Form::text('name_of_director',$v->director_name,array('class'=>'form-control','readonly' )); ?>
 
+					<?php endforeach; ?>
 																				</div>
 																		</div>
+																		
 																</div>
 														</div>
+					<?php endif; ?>
+										<?php if($details->business_description != ''): ?>
 														<div class="form-body pal">
 																<div class="form-group">
 																		<label class="col-md-3 control-label" for="inputName">Description</label>
@@ -146,6 +157,7 @@
 																		</div>
 																</div>
 														</div>
+														<?php endif; ?>
 														<div class="form-body pal">
 																<div class="form-group">
 																		<label class="col-md-3 control-label" for="inputName">Documents</label>
@@ -172,9 +184,8 @@
 																		<?php endif; ?>
 																</div>
 														</div>
-												<?php endif; ?>
+												
 										
-										<?php if($details->user_type == 'Existing Business'): ?>
 										<div class="form-body pal">
 										<div class="form-group"><label class="col-md-3 control-label" for="inputName">Mobile Number</label>
 										<div class="col-md-9">
@@ -196,28 +207,7 @@
 										</div>
 										</div>
 										</div>	
-										
-										<div class="form-body pal">
-										<div class="form-group"><label class="col-md-3 control-label" for="inputName">ACTA Number</label>
-										<div class="col-md-9">
-										<div class="input-icon right">
-										<?php echo Form::text('acta_number',$details->acta_number,array('class'=>'form-control','readonly' )); ?>
-
-										</div>
-										</div>
-										</div>
-										</div>
-										
-										<div class="form-body pal">
-										<div class="form-group"><label class="col-md-3 control-label" for="inputName">Number of Year</label>
-										<div class="col-md-9">
-										<div class="input-icon right">
-										<?php echo Form::text('number_of_year',$details->number_of_year,array('class'=>'form-control','readonly' )); ?>
-
-										</div>
-										</div>
-										</div>
-										</div>
+										<?php if($details->registered_address != ''): ?>
 												<div class="form-body pal">
 														<div class="form-group">
 																<label class="col-md-3 control-label" for="inputName">Address</label>
@@ -229,72 +219,10 @@
 																</div>
 														</div>
 												</div>
-												<div class="form-body pal">
-														<div class="form-group">
-																<label class="col-md-3 control-label" for="inputName">Business Logo</label>
-																<div class="col-md-9">
-																		<div class="input-icon right">
-																				<?php if(file_exists(public_path().'/upload/attachment/'.$details->business_logo) && $details->business_logo != ''): ?>
-																						<?php echo Html::image(asset('upload/attachment/'.$details->business_logo),'',array('class'=>'img-responsive img-circle','width'=>'140')); ?>
-
-																				<?php else: ?>
-																						<?php echo Html::image(asset('upload/no-img.png'), 'no-img',array('class'=>'img-responsive img-circle','width'=>'100')); ?>
-
-																				<?php endif; ?>							    
-																		</div>
-																</div>
-														</div>
-												</div>	
-												<div class="form-body pal">
-														<div class="form-group">
-																<label class="col-md-3 control-label" for="inputName">Director Name</label>
-																<div class="col-md-9">
-																		<div class="input-icon right">
-																				<?php echo Form::text('name_of_director',$details->name_of_director,array('class'=>'form-control','readonly' )); ?>
-
-																		</div>
-																</div>
-														</div>
-												</div>
-												<div class="form-body pal">
-														<div class="form-group">
-																<label class="col-md-3 control-label" for="inputName">Description</label>
-																<div class="col-md-9">
-																		<div class="input-icon right">
-																				<?php echo Form::textarea('business_description',$details->business_description,array('class'=>'form-control','readonly' )); ?>
-
-																		</div>
-																</div>
-														</div>
-												</div>
+												
+											<?php endif; ?>	
+												
 										
-												<div class="form-body pal">
-														<div class="form-group">
-																<label class="col-md-3 control-label" for="inputName">Documents</label>
-																<?php if(COUNT($details->getDocumentList)>0): ?>
-																<div class="col-md-9">		
-																		<ul>
-																				<?php foreach($details->getDocumentList as $v): ?>
-																						<li>
-																								<?php /*<?php echo e($v->document_name); ?>*/ ?>
-																								<?php if(file_exists(public_path().'/upload/attachment/'.$v->document_name)): ?>
-																										<a href="<?php echo e(URL::route('download_business_file',$v->document_name)); ?>">
-																												<?php echo Html::image(asset('icon/'.Helpers::get_extension_icon($v->document_name)), 'Download', array('title'=>'Download '.Helpers::get_extension($v->document_name) )); ?>
-
-																										</a>
-																								<?php endif; ?>    
-																						</li>
-																				<?php endforeach; ?>
-																		</ul>
-																</div>
-																<?php else: ?>
-																		<div class="col-md-9">
-																				<div class="input-icon right">N/A</div>
-																		</div>    
-																<?php endif; ?>
-														</div>
-												</div>
-										<?php endif; ?>
 										
 										</div>
 								</div>
@@ -356,7 +284,7 @@
 						<div class="form-group"><label class="col-md-3 control-label" for="inputName">Selling Price</label>
 						<div class="col-md-9">
 						<div class="input-icon right">
-						<?php echo Form::text('funds_required',$details->getCurrency->country_currency_symbol.' '.$details->selling_price,array('class'=>'form-control','readonly' )); ?>
+						<?php echo Form::text('funds_required',$details->getspCurrency->country_currency_symbol.' '.$details->selling_price,array('class'=>'form-control','readonly' )); ?>
 
 						</div>
 						</div>
@@ -398,7 +326,7 @@
 						<div class="form-group"><label class="col-md-3 control-label" for="inputName">Sales Report</label>
 						<div class="col-md-9">
 						<div class="input-icon right">
-						<?php if(file_exists(public_path().'/upload/proposal/'.$details->sales_report_name) && $details->sales_report_name != ''): ?>
+						<?php if(file_exists(public_path().'/upload/sales_report/'.$details->sales_report_name) && $details->sales_report_name != ''): ?>
 						<a href="<?php echo e(URL::route('download_sales_report',$details->sales_report_name)); ?>"><?php echo Html::image(asset('icon/'.Helpers::get_extension_icon($details->sales_report_name)),'Download',array('title'=>'Download '.Helpers::get_extension($details->sales_report_name) )); ?></a>
 						<?php else: ?>
 						N/A

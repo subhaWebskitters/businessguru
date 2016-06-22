@@ -72,7 +72,10 @@
 <script src="{{ asset('admin_assets/js/main.js')}}"></script>
 <script src="{{ asset('admin_assets/vendors/jquery-validate/jquery.validate.min.js')}}"></script>
 <script src="{{ asset('admin_assets/js/form-validation.js')}}"></script>
-<script> var BASE_URL = "{{ URL::to('/').'/admin' }}"; </script>   
+<script>
+var BASE_URL = "{{ URL::to('/').'/admin' }}";
+var CSRF_TOKEN = "{{ csrf_token() }}";
+</script>   
 <!--<script>
     var FRONT_URL = "{{ URL::to('/') }}";
     var BASE_URL = "{{ URL::to('/').'/admin' }}";

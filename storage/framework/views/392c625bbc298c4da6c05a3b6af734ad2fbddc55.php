@@ -70,7 +70,7 @@
                                     </div>
                                                 
 				    <div class="form-body pal">
-                                        <div class="form-group"><label class="col-md-3 control-label" for="inputName">ACTA No</label>
+                                        <div class="form-group"><label class="col-md-3 control-label" for="inputName">ACRA Number</label>
                                             <div class="col-md-9">
                                                 <div class="input-icon right">
                                                 <?php echo Form::text('arca_no', $details->arca_no, array('class'=>'form-control','readonly' )); ?>
@@ -180,11 +180,10 @@
                             <div class="panel-heading">FUNDS</div>
                             <div class="panel-body pan industryview">                                    
                                     <div class="form-body pal">
-                                        
                                         <div class="form-group"><label class="col-md-3 control-label" for="inputName">Annual Salary</label>
                                             <div class="col-md-9">
                                                 <div class="input-icon right">
-                                                <?php echo Form::text('annual_salary', $details->annual_salary, array('class'=>'form-control','readonly' )); ?>
+                                                <?php echo Form::text('annual_salary',$details->annual_salary, array('class'=>'form-control','readonly' )); ?>
 
                                                 </div>
                                             </div>

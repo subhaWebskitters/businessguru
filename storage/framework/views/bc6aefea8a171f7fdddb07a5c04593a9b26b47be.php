@@ -1,32 +1,32 @@
 <?php if(count($popularData) >0): ?>
 		<?php foreach($popularData as $pData): ?>
 				<?php /**/
-				$investorID = $pData->investor_id;
-				$investorName = $pData->name;
-				$businessID = $pData->business_id;
+				$businessID = $pData->id;
 				$businessSlug = $pData->business_slug;
 				$businessName = $pData->business_name;
 				$businessImage = $pData->business_logo;
-				$industryName = $pData->industry_name;
+				$industryName = $pData->category_list;
 				$businessDescription = $pData->business_description;
 				$businessAddress = $pData->registered_address;
-				$listedDate = date('l jS \of F Y h:i:s A',strtotime($pData->listed_date));
+				$listedDate = date('l jS \of F Y h:i:s A',strtotime($pData->created_at));
 				/**/ ?> 		
-
 				<article class="single-blog clear">
 						<div class="image">
-						<?php echo e(Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage,array('height'=>'152','width'=>'229'))); ?>
+						<?php if(!$businessImage): ?>
+								<?php echo e(Html::image(asset('upload/businessuser/popularthumb/229152.jpg'))); ?>
 
+						<?php else: ?>
+								<?php echo e(Html::image(asset('upload/businessuser/popularthumb/'.$businessImage),$businessImage)); ?>
+
+						<?php endif; ?>
 						</div>
 						<div class="entry-header">
-								<h4><a href="<?php echo e(URL::route('business_details',$businessSlug)); ?>"><?php echo e($businessName); ?></a></h4>
+								<h4><a href="<?php echo e(URL::route('discover_details',$businessSlug)); ?>"><?php echo e($businessName); ?></a></h4>
 						</div>
 						<div class="entry-header">
 								<a href="<?php echo e(URL::route('discover_details',$businessSlug)); ?>" class="lmr">learn more</a>
-								<p><?php echo e(substr($businessDescription,0,50)."...."); ?></p>
+								<p><?php echo substr($businessDescription,0,50)."...."; ?></p>
 						</div>
 				</article>
 		<?php endforeach; ?>
-<?php else: ?>
-		<article class="single-blog clear"><div class="well" style="color:red">No Record Found</div></article>
 <?php endif; ?>

@@ -21,7 +21,15 @@ $setval = '';
     <?php if($investor_id != '' || $buss_id != ''): ?>
     <div class="upper_tab clear" style="display:block;">
 		<ul>
-				<li class="funds_tab"><a href="<?php echo e(URL::route('changepassword')); ?>">Change Password</a></li>
+				<li class="funds_tab">
+						<?php if($investor_id != ''): ?>
+								<a href="<?php echo e(URL::route('changepassword')); ?>">
+						<?php elseif($buss_id != ''): ?>
+								<a href="<?php echo e(URL::route('business_changepassword')); ?>">
+						<?php endif; ?>
+								Change Password
+						</a>
+				</li>
 				  
 				<?php if($investor_id == '' && $buss_id != ''): ?>  
 				  <li class="funds_tab"><a href="<?php echo e(URL::route('business_dashboard')); ?>">Edit Profile</a></li>
@@ -49,15 +57,15 @@ $setval = '';
 	  </div>
 	</nav>
       </div>
-      <div class="search_sec">
-	<?php echo Form::open(array('route'=>'discover','class'=>'form-validate','novalidate','enctype'=>'multipart/form-data')); ?>
+		<div class="search_sec">
+				<?php echo Form::open(array('route'=>'investor_dashboard','class'=>'form-validate','novalidate','enctype'=>'multipart/form-data')); ?>
 
-	  <?php echo Form::text('search',$setval,array('class'=>"form-control required", 'placeholder'=>"Search here", 'id'=>"searchHeader")); ?>
+						<?php echo Form::text('search',$setval,array('class'=>"form-control required", 'placeholder'=>"Search here", 'id'=>"searchHeader")); ?>
 
-	  <?php echo Form::submit('Save', array('class' => 'btn')); ?>
+						<?php echo Form::submit('Save', array('class' => 'btn')); ?>
 
-	<?php echo Form::close(); ?>
+				<?php echo Form::close(); ?>
 
-      </div>
+		</div>
     </div>
   </header>

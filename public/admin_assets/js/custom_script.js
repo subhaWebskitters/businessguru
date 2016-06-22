@@ -55,7 +55,7 @@ $(document).on('keypress','#password_confirmation',function(){
     }
     
     
-        function statusEditor(type,element){
+    function statusEditor(type,element){
         var id=$(element).attr('data-team');
         //$("#loader_"+id).css("visibility","visible");
         var url ='';
@@ -110,7 +110,7 @@ $(document).on('keypress','#password_confirmation',function(){
 						type: 'post',
 						data: {email:$('#email').val(),_token: csrf_token},
 						url: base_url+'/invester_email_unique/',
-						success: function(data){ alert()
+						success: function(data){ 
 								if (data != 0){
 										alert('Email id already taken. Please select another email ID');
 										$("#password").css('border','1px solid red');
@@ -145,68 +145,156 @@ $(document).on('keypress','#password_confirmation',function(){
 		});
 
 
-/******************** Verification of OTP ********************************/
+/* OTP FOR INVESTOR SIGN UP SEND & VERIFIED SMS WITH TWILLO */
 
-$(document).on('click','.verify_otp',function(){
-		$.ajax({
-				type: 'post',
-				data: {contact:$('#contact').val(),_token: csrf_token},
-				url: base_url+'/send_otp',
-				success: function(data){
-						if (data != 0){
-								otp_value = data;
-								$('.otp_status').html('OTP has been sent to your mobile please check.');
-								$('.verify_otp').remove();
-								$('.otp_status').after('<div class="enter_otp"><input type="text" name="otp_value" id="otp_value"/><button id="verify_button" class="buttonM bBlue verify_button" type="button">Verify</button></div>');
-						}
-						else
-								$('.otp_status').html("Can't send sms please check your phone no.");
-				},
-				error: function(xhr, textStatus, errorThrown){
-						$('.otp_status').html("Can't send sms please check your phone no.");
+		//$(document).on('click','.verify_otp',function(){
+		//    if ($('#contact').val() == '') {
+		//				alert('Please enter Mobile Number');
+		//				return false;
+		//		}
+		//		else{
+		//		$.ajax({
+		//				type: 'post',
+		//				data: {contact:$('#contact').val(),_token: csrf_token},
+		//				url: base_url+'/send_otp',
+		//				success: function(data){
+		//						if (data != 0){
+		//								otp_value = data;
+		//								$('.otp_status').html('OTP has been sent to your mobile please check.');
+		//								$('.verify_otp').css('display','none');
+		//								$('#hid_otp_val_investor').val(otp_value);
+		//								$('.otp_status').after('<div class="enter_otp"><input type="text" name="otp_value" id="otp_value"/><button id="verify_button" class="buttonM bBlue verify_button" type="button">Verify</button></div>');
+		//						}
+		//						else
+		//								$('.otp_status').html("Can't send sms please check your phone no.");
+		//				},
+		//				error: function(xhr, textStatus, errorThrown){
+		//						$('.otp_status').html("Can't send sms please check your phone no.");
+		//				}
+		//		});
+		//		}
+		//});
+  
+		$(document).on('click','.verify_button',function(){
+				var user_otp_value = $('#otp_value').val();
+				
+				var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9+/=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/rn/g,"n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+				
+				var otp_value = Base64.decode($('#hid_otp_val_investor').val());
+				
+				if(user_otp_value == otp_value){
+						$('#contact').attr('readonly','true');
+						$('#otp_verified').val(1);
+						$('.verify_otp,.otp_status,.enter_otp').remove();
+						//alert('Successfully verified');
+						$('#form_completion').css('display','block');
+						$('#save_invester_step').submit();
 				}
-		});    
-});
+				else{
+						alert('OTP mismatch.')
+				}
+		});
+
+/* OTP FOR INVESTOR SIGN UP SEND & VERIFIED SMS WITH TWILLO */
+
+
+/* OTP FOR BUSINESS SIGN UP SEND & VERIFIED SMS WITH TWILLO */
+
+		//$(document).on('click','.buss_verify_otp',function(){
+		//		if ($('#contact').val() == '') {
+		//				alert('Please enter Mobile Number');
+		//				return false;
+		//		}
+		//		else{
+		//				//$('#buss_otp_verify').val(1);
+		//				$.ajax({
+		//						type: 'post',
+		//						data: {contact:$('#contact').val(),_token: csrf_token},
+		//						url: base_url+'/buss_send_otp',
+		//						success: function(data){ 
+		//								if (data != 0){
+		//										otp = data; 
+		//										$('.buss_otp_status').html('OTP has been sent to your mobile please check.');
+		//										$('.buss_verify_otp').css('display','none');
+		//										$('#hid_otp_val_business').val(otp);
+		//										$('.buss_otp_status').after('<div class="enter_otp"><input type="text" name="otp_value" id="otp_value"/><a href="javascript:void(0)" class="buss_verify_button">Verify</a></div>');
+		//								}
+		//								else{
+		//										$('.buss_otp_status').html("Can't send sms please check your phone no.");
+		//										//$('#buss_otp_verify').val(0);
+		//								}
+		//						},
+		//						error: function(xhr, textStatus, errorThrown){
+		//								$('.buss_otp_status').html("Can't send sms please check your phone no.");
+		//								//$('#buss_otp_verify').val(0);
+		//						}
+		//				});
+		//		}
+		//});
+
+		$(document).on('click','.buss_verify_button',function(){ 
+				
+				var otpval= $('#otp_value').val(); 
+				
+				var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9+/=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/rn/g,"n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+				
+				var otp= Base64.decode($('#hid_otp_val_business').val());
+				
+				if(otpval == otp){
+						$('#contact').attr('readonly','true');
+						$('#buss_otp_verify').val(1);
+						$('.buss_verify_otp,.buss_otp_status,.enter_otp').remove();
+						//alert('Successfully verified');
+						$('#action').val('Process');
+				    $('#business_form').submit();
+				}
+				else{
+						alert('OTP mismatch.')
+				}
+		});
+
+/* OTP FOR BUSINESS SIGN UP SEND & VERIFIED SMS WITH TWILLO */
 
 /* *************************************************** */
-    
-$(document).on('click','.verify_button',function(){
-    var user_otp_value = $('#otp_value').val();
-    if(user_otp_value == otp_value)
-    {
-      $('#otp_verified').val(1);
-      $('.verify_otp,.otp_status,.enter_otp').remove();
-      alert('Successfuly verified');
-    }
-    else{
-        alert('OTP mismatch.')
-    }
-});
    
 	  
-		/************ Image File Upload *********************/
+		/************ IMAGE FILE UPLOAD FOR INVESTOR *********************/
 		
 		$(document).on('change','#fileUpload',function(){ 
 				var countFiles = $(this)[0].files.length;
 				var imgPath = $(this)[0].value;
 				var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
-				var image_holder = $("#image-holder");
-				
-				image_holder.empty();
+				var image_holder = $("#invest_logo");
+				var old_image = $("#invest_logo").attr("src"); //alert(old_image); 
+
+				//image_holder.empty();
 		
-				if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+				if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") { 
+						
 						if (typeof (FileReader) != "undefined") {		
 								//loop for each file selected for uploaded.
-								for (var i = 0; i < countFiles; i++) {
+								for (var i = 0; i < countFiles; i++) { 
 										var reader = new FileReader();
-										reader.onload = function (e) {
-																				$("<img />", {
-																						"src": e.target.result,
-																						"class": "thumb-image"
-																				}).appendTo(image_holder);
+										var fileSize = this.files[0]; 
+										var sizeInMb = (fileSize.size/1024)/1024; 
+										var sizeLimit= 15;
+										if (sizeInMb > sizeLimit) {
+												$("#invest_logo").attr("src",'images/img16.jpg');
+												$('#image-holder').html('File size must be less than 15MB');
+										}
+										else{
+												reader.onload = function (e) {
+														$("#invest_logo").attr("src",e.target.result);
+														$("#invest_logo").addClass("thumb-image");
+																				//$("<img />", {
+																				//		"src": e.target.result,
+																				//		"class": "thumb-image"
+																				//}).appendTo(invest_logo);
 																		}
-										image_holder.show();
-										reader.readAsDataURL($(this)[0].files[i]);
+												$('#image-holder').html('');
+												//image_holder.show();
+												reader.readAsDataURL($(this)[0].files[i]);
+										}
 								}
 						}
 						else {
@@ -215,10 +303,11 @@ $(document).on('click','.verify_button',function(){
 				}
 				else {
 						alert("Pls select only images");
+						$('#fileUpload').val('');
 				}
 		});
    
-		/* ************************************************** */
+		/************ IMAGE FILE UPLOAD FOR INVESTOR *********************/
 	 
 		/************ File Upload *********************/
 	 
@@ -258,7 +347,7 @@ $(document).on('click','#back_to_basic',function(){
 });
 
 
-		/* Validate Portfolio page with OTP verification */
+		/*  VALIDATE BASIC PAGE FOR INVESTOR SIGN UP  */
 
 		$(document).on('click','#go_to_protfolio',function(){
 		    
@@ -266,7 +355,7 @@ $(document).on('click','#back_to_basic',function(){
 				var contact         = $('#contact').val();
 				var company_name    = $('#company_name').val();
 				var arca_no         = $('#arca_no').val();
-				var otp_verified    = $('#otp_verified').val();
+				
 				var business_type = $("input[name='investor_type']").is(':checked');
 				//alert(business_type);
 				if (business_type == false) {
@@ -279,27 +368,36 @@ $(document).on('click','#back_to_basic',function(){
 						$("#name").css('border','1px solid red');
 						return false;
 				}
+				if(name != '') {
+						    $('#name').css('border','');
+						}
 		
 				if (contact == ''){
 						alert('Please enter contact no');
 						$("#contact").css('border','1px solid red');
 						return false;
 				}
+				if(contact != '') {
+						    $('#contact').css('border','');
+						}
 				if (company_name == ''){
 						alert('Please enter company name');
 						$("#company_name").css('border','1px solid red');
 						return false;
 				}
+				if(company_name != '') {
+						    $('#company_name').css('border','');
+						}
 				if (arca_no == ''){
 						alert('Please enter ARCA no');
 						$("#arca_no").css('border','1px solid red');
 						return false;
 				}
-				if (otp_verified == 0){
-						alert('OTP verification failed');
-						return false;
-				}
-		
+				if(arca_no != '') {
+						    $('#arca_no').css('border','');
+						}
+				$('#contactno').html(contact);
+				$('.three_option h2').html('Let us understand <br> you better');
 				$('#form_basic').css('display','none');
 				$('#form_portfolio').css('display','block');
 				$('.basic_tab').removeClass('active');
@@ -308,12 +406,11 @@ $(document).on('click','#back_to_basic',function(){
 				$('#basic_li').removeClass('active_list');
 				$('#basic_li').addClass('complete_list');
 				$('#portfolio_li').addClass('active_list');
-				
 		});
 
-		/* ****************************************** */
+		/*  END OF VALIDATE BASIC PAGE FOR INVESTOR SIGN UP  */
 
-		/* Validate Fund verification */
+		/* VALIDATE PORTFOLIO PAGE FOR INVESTOR SIGN UP */
 
 		$(document).on('click','#go_to_fund_next',function(){
 				var about_company   = $('#about_company').val();
@@ -325,18 +422,22 @@ $(document).on('click','#back_to_basic',function(){
 						$("#about_company").css('border','1px solid red');
 						return false;
 				}
+				if(about_company != '') {
+						    $('#about_company').css('border','');
+						}
 				if (portfolio == ''){
 						alert('Please Upload file');
 						$("#portfolioUpload").css('border','1px solid red');
 						return false;
 				}
+				
 				if (!industries){
 						alert('Please enter industries');
 						$("#industries").css('border','1px solid red');
 						return false;
 				}
 				
-		
+				$('.three_option h2').html('an investment in knowledge <br> pays the best interest-benjamin franklinin');
 				$('#form_basic').css('display','none');
 				$('#form_portfolio').css('display','none');
 				$('#go_to_fund_next').css('display','none');
@@ -349,11 +450,11 @@ $(document).on('click','#back_to_basic',function(){
 				$('#funds_li').addClass('active_list');
 		});
 
-		/* ****************************************** */
+		/* END OF VALIDATE PORTFOLIO PAGE FOR INVESTOR SIGN UP */
 
-		/* Validate Fund verification */
+		/* VALIDATE FUND PAGE FOR INVESTOR SIGN UP */
 
-		$(document).on('click','#go_to_completion',function(){ 
+		$(document).on('click','#go_to_otp_verify',function(){ 
 				var annual_salary   = $('#annual_salary').val();
 				var will_invest    	= $('#willing_to_invest').val();
 		
@@ -362,86 +463,98 @@ $(document).on('click','#back_to_basic',function(){
 						$("#annual_salary").css('border','1px solid red');
 						return false;
 				}
+				if(annual_salary != '') {
+						    $('#annual_salary').css('border','');
+						}
 				if (will_invest == ''){
 						alert('Please Fill the willing to invest field');
 						$("#willing_to_invest").css('border','1px solid red');
 						return false;
 				}
-		
+				if(will_invest != '') {
+						    $('#willing_to_invest').css('border','');
+						}
+				$.ajax({
+						type: 'post',
+						data: {contact:$('#contact').val(),_token: csrf_token},
+						url: base_url+'send_otp',
+						success: function(data){
+								if (data != 0){
+										otp_value = data;
+										
+										$('.verify_otp').css('display','none');
+										$('#hid_otp_val_investor').val(otp_value);
+										
+										//alert('OTP has been sent to your mobile for future verification.');
+										//$('.otp_status').html('OTP has been sent to your mobile please check.');
+										//$('.otp_status').after('<div class="enter_otp"><input type="text" name="otp_value" id="otp_value"/><button id="verify_button" class="buttonM bBlue verify_button" type="button">Verify</button></div>');
+								}
+								else
+										alert("Can't send sms please check your phone no.");
+										//$('.otp_status').html("Can't send sms please check your phone no.");
+						},
+						error: function(xhr, textStatus, errorThrown){
+								alert("Can't send sms please check your phone no.");
+								//$('.otp_status').html("Can't send sms please check your phone no.");
+						}
+				});
+
+				$('.three_option h2').html('OTP Verification');
 				$('#investor_div').css('display','none');
 				$('#form_basic').css('display','none');
 				$('#form_portfolio').css('display','none');
 				$('#form_fund').css('display','none');
-				$('#form_completion').css('display','block');
-
-				$('.basic_tab').removeClass('active');
-				$('.portfolio_tab').addClass('active');
+				$('#form_otd_verify').css('display','block');
 				
-				$('#save_invester_step').submit();
+				$('#portfolio_li').remove();
+				$('#basic_li').remove();
+				$('#funds_li').remove();
+
+				
+				
+				
+				//$('.basic_tab').removeClass('active');
+				//$('.portfolio_tab').addClass('active');
+				
+				
 				
 		});
 
-		/* *********************************************** */
+		/* VALIDATE FUND PAGE FOR INVESTOR SIGN UP */
+		
+		/* VALIDATE SMS OTP VERIFIED PAGE FOR INVESTOR SIGN UP */
+		
+		
+		//$(document).on('click','#go_to_completion',function(){
+		//		var otp_verified    = $('#otp_verified').val();		
+		//		if (otp_verified == 0){
+		//				alert('OTP verification failed');
+		//				return false;
+		//		}
+		//		$('#investor_div').css('display','none');
+		//		$('#form_basic').css('display','none');
+		//		$('#form_portfolio').css('display','none');
+		//		$('#form_fund').css('display','none');
+		//		$('#form_otd_verify').css('display','none');
+		//		
+		//		
+		//		//$('#save_invester_step').submit();
+		//});
+		
+		/* END OF VALIDATE SMS OTP VERIFIED PAGE FOR INVESTOR SIGN UP */
+		
 
 
 //debamala
- $('.business').click(function(){
-	$('.chooseUserType').css('display','none');
-	$('.business_div').css('display','block');
-	$('.errorSuccess').css('display','none');
-    });
-var otp = '';
- $(document).on('click','.buss_verify_otp',function(){
- if ($('#contact').val() == '') {
-  alert('Please enter Mobile Number');
-  return false;
- }
- else
- {
-    $('#buss_otp_verify').val(1);
-	$.ajax({
-	    type: 'post',
-	    data: {contact:$('#contact').val(),_token: csrf_token},
-	    url: base_url+'/buss_send_otp',
-	    success: function(data){
-		if (data != 'fail')
-		{
-		   $('.buss_verify_otp').css('display','none');
-		   $('.buss_otp_status').html('OTP has been sent to your mobile please check.');
-		   otp = data;
-		$('.buss_otp_status').after('<div class="enter_otp"><input type="text" name="otp_value" id="otp_value"/><a href="javascript:void(0)" class="buss_verify_button">Verify</a></div>');
-		}
-		else
-		{
-		   $('.buss_otp_status').html("Can't send sms please check your phone no.");
-		   $('#buss_otp_verify').val(0);
-		}
-	    },
-	    error: function(){
-		$('.otp_status').html("Can't send sms please check your phone no.");
-		$('#buss_otp_verify').val(0);
-	     }
-	});
- }
-    });
-    
-    $(document).on('click','.buss_verify_button',function(){
-	$.ajax({
-	    type: 'post',
-	    data: {otp_value:$('#otp_value').val(),otp:otp,_token: csrf_token},
-	    url: base_url+'/buss_verify_otp/',
-	    success: function(data){
-		if(data == 1){
-		  $('.buss_verify_otp,.buss_otp_status,.enter_otp').remove();
-		  alert('Successfuly verified')
-		}
-		else{
-		    alert('OTP mismatch.')
-		}
+		$('.business').click(function(){
+				$('.chooseUserType').css('display','none');
+				$('.business_div').css('display','block');
+				$('.errorSuccess').css('display','none');
+		});
+ 
+ 
 		
-	    }
-	}); 
-    });
+
     
 
 $(document).on('click','.business_type',function(){
@@ -486,7 +599,7 @@ $(document).on('click','.business_type',function(){
 $(document).on('keyup','#email',function(){
     
 var email = $('#email').val();
-   if(email== ''){
+   if(email== ''){ 
 	       $('.email_error').css('color','red');
 	       $('.email_error').html('email cannot be blank');
                return false;
@@ -569,7 +682,7 @@ var pass = $('#password').val();
    $(document).on('click','#next',function(){
    var email = $('#email').val();
    pass = $('#password').val();
-   if(email== ''){
+   if(email== ''){ 
 	       $('.email_error').css('color','red');
 	       $('.email_error').html('email cannot be blank');
                return false;
@@ -603,16 +716,21 @@ var pass = $('#password').val();
         
 
 });
+	 
+	 
+	 
 function IsEmail(email) {
-        var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        if(!regex.test(email)) {
-           return false;
-        }else{
-           return true;
-        }
-      }
-   $(document).ready(function()
-   {  
+		var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		if(!regex.test(email)) {
+				return false;
+		}
+		else{
+				return true;
+		}
+}
+
+
+   $(document).ready(function(){  
 
 var counter = 2;
 	
@@ -713,131 +831,201 @@ var counter = 2;
     });
 
   });
-  $(document).on('click','#next2',function(){
-
-  if($(".business_type:checked").val()=='start_up'||$(".business_type:checked").val()=='existing_business')
-  {
-      if($('#bussiness_name').val() == '')
-      {
-      $('#bussiness_name').css('border-color','red').focus();
-       alert('business name required');
-       return false;
-      }
-    if($('#contact').val() == '')
-   {
-   $('#contact').focus();
-    alert('contact number required');
-    return false;
-   }
-   if ($('#buss_otp_verify').val() == 0)
-   {
-    alert('OTP verification failed');
-    return false;
-   }
-      if($('#acra_number').val() == '')
-      {
-	$('#acra_number').css('border-color','red').focus();
-	 alert('acta number required');
-	 return false;
-      }
-     if($('#no_year').val() == '')
-	{
-	$('#no_year').css('border-color','red').focus();
-	 alert('no of year required');
-	 return false;
-	}
-    if($('select#director_name').val() == '')
-	{
-	$('select#director_name').css('border-color','red').focus();
-	 alert('Director Name required');
-	 return false;
-	}
-      if($('select#business_cat').val()== null)
-      {
-    $('select#business_cat').css('border-color','red').focus();
-       alert('business category required');
-       return false;
-      }
-      if($('#website').val() == '')
-    {
-    $('#website').focus();
-     alert('website required');
-     return false;
-    }
-    if($('select#business_cat').val()== null)
-      {
-    $('select#business_cat').css('border-color','red').focus();
-       alert('business category required');
-       return false;
-      }
-      
-  }
-  if ($(".business_type:checked").val()=='business_ideas') {
-    var email = $('#buss_email').val();
-    if($('#bussiness_name').val() == '')
-      {
-      $('#bussiness_name').css('border-color','red').focus();
-       alert('business name required');
-       return false;
-      }
-   if($('#contact').val() == '')
-   {
-   $('#contact').focus();
-    alert('contact number required');
-    return false;
-   }
-   if ($('#buss_otp_verify').val() == 0)
-   {
-    alert('OTP verification failed');
-    return false;
-   }
-   if($('#buss_email').val() == '')
-   {
-   $('#buss_email').focus();
-    alert('email required');
-    return false;
-   }
-   if(IsEmail(email)==false){
-   $('#buss_email').focus();
-    alert('please enter correct email');
-    return false;
-   }
-   if($('#website').val() == '')
-   {
-   $('#website').focus();
-    alert('website required');
-    return false;
-   }
-    if($('select#business_cat').val()== null)
-      {
-    $('select#business_cat').css('border-color','red').focus();
-       alert('business category required');
-       return false;
-      }
-  }
-
-
-  if($('#address').val() == '')
-   {
-   $('#address').css('border-color','red').focus();
-    alert('address required');
-    return false;
-   }
-  if($('#desc').val() == '')
-   {
-   $('#desc').css('border-color','red').focus();
-    alert('description required');
-    return false;
-   }
-
-   else
-   {
-    $('.basic_tab').removeClass('active_list').addClass('complete_list');
-    $('.proposal_tab').addClass('active_list');
-    $('.proposal_div').css('display','block');
-    $('.signup_basic').css('display','none');
-   }
-  });
+ 
+  
+		$(document).on('click','#next2',function(){
+				
+				if($(".business_type:checked").val()=='start_up' || $(".business_type:checked").val()=='existing_business'){
+						
+						if($('#bussiness_name').val() == ''){
+								$('#bussiness_name').css('border-color','red').focus();
+								alert('Business Name required');
+								return false;
+						}
+						if($('#bussiness_name').val() != '') {
+						    $('#bussiness_name').css('border-color','');
+						}
+						if($('#contact').val() == ''){
+								$('#contact').focus();
+								alert('Mobile number required with country code (+917278345678)');
+								return false;
+						}
+						if($('#contact').val() != '') {
+						    $('#contact').css('border-color','');
+						}
+						
+						if($('#acra_number').val() == ''){
+								$('#acra_number').css('border-color','red').focus();
+								alert('acta number required');
+								return false;
+						}
+						if($('#acra_number').val() != '') {
+						    $('#acra_number').css('border-color','');
+						}
+						if($('#no_year').val() == ''){
+								$('#no_year').css('border-color','red').focus();
+								alert('no of year required');
+								return false;
+						}
+						if($('#no_year').val() != ''){
+								var year= $('#no_year').val(); 
+								if (isNaN(year)) {
+										alert("Please Give Integer value for the year");
+										$('#no_year').css('border-color','red').focus();
+										return false;
+								}
+						}
+						if($('#no_year').val() != '') {
+						    $('#no_year').css('border-color','');
+						}
+						if($('select#director_name').val() == ''){
+								$('select#director_name').css('border-color','red').focus();
+								alert('Director Name required');
+								return false;
+						}
+						if($('select#director_name').val() != '') {
+						    $('select#director_name').css('border-color','');
+						}
+						
+						
+						
+						if($('#website').val() == ''){
+							$('#website').focus();
+								alert('website required');
+								return false;
+						}
+						if ($('#website').val() != '') {
+								var url = $('#website').val(); 
+								//var url_validate = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+(?:com|net|org|in)]))?/;
+								//var url_validate = /[http|https]:\/\/(www)[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}/;
+								//var url_validate = /^(https?:\/\/)?((?:[a-z0-9-]+\.)+(?:com|net|org|in))(?:\/|$)/i;
+								//var url_validate = /(http|https):\/\/(\w+:{0,1}\w*@)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.(?:com|net|org|in))?$/;
+							
+								var url_validate = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
+							
+								if(!url_validate.test(url)){ 
+										$('#website').css('border-color','red').focus();
+										alert('Please give proper website address');
+										return false;
+								}
+						}
+						if($('#website').val() != '') {
+						    $('#website').css('border-color','');
+						}
+						//if($('select#business_cat').val()== null){
+						//		$('select#business_cat').css('border-color','red').focus();
+						//		alert('business category required');
+						//		return false;
+						//}
+						
+						if ($('#investor_type').val() == '') {
+								$('#investor_type').css('border-color','red').focus();
+								alert('Investor type required');
+								return false;
+						}
+						else{ 
+								$('#investor_type').css('border-color','');
+								
+						}
+						
+				}
+				
+				if ($(".business_type:checked").val()=='business_ideas') {
+						var email = $('#buss_email').val();
+						if($('#bussiness_name').val() == ''){
+								$('#bussiness_name').css('border-color','red').focus();
+								alert('business name required');
+								return false;
+						}
+						if($('#bussiness_name').val() != '') {
+						    $('#bussiness_name').css('border-color','');
+						}
+						if($('#contact').val() == ''){
+								$('#contact').focus();
+								alert('contact number required');
+								return false;
+						}
+						if($('#contact').val() != '') {
+						    $('#contact').css('border-color','');
+						}
+						//if ($('#buss_otp_verify').val() == 0){
+						//		alert('OTP verification failed');
+						//		return false;
+						//}
+						if($('#buss_email').val() == ''){
+								$('#buss_email').focus();
+								alert('email required');
+								return false;
+						}
+						if(IsEmail(email)==false){
+								$('#buss_email').focus();
+								alert('please enter correct email');
+								return false;
+						}
+						if($('#buss_email').val() != '') {
+						    $('#buss_email').css('border-color','');
+						}
+						
+						if ($('select#investor_type').val() != '') {
+								$('select#investor_type').css('border-color','red').focus();
+								alert('Investor type required');
+								return false;
+						}
+						else{
+								$('select#investor_type').css('border-color','none');
+						}
+						
+						if($('#website').val() == ''){
+							$('#website').focus();
+								alert('website required');
+								return false;
+						}
+						if ($('#website').val() != '') {
+								var url = $('#website').val(); 							
+								var url_validate = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
+								if(!url_validate.test(url)){ 
+										$('#website').css('border-color','red').focus();
+										alert('Please give proper website address');
+										return false;
+								}
+						}
+						if($('#website').val() != '') {
+						    $('#website').css('border-color','');
+						}
+						
+						if ($('#investor_type').val() == '') {
+								$('#investor_type').css('border-color','red').focus();
+								alert('Investor type required');
+								return false;
+						}
+						else{
+								$('#investor_type').css('border-color','');
+						}
+				}
+		
+				if($('#address').val() == ''){
+						$('#address').css('border-color','red').focus();
+						alert('address required');
+						return false;
+				}
+				if($('#address').val() != '') {
+						    $('#address').css('border-color','');
+						}
+				if($('#desc').val() == ''){
+						$('#desc').css('border-color','red').focus();
+						alert('description required');
+						return false;
+				}
+				if($('#desc').val() != '') {
+						    $('#desc').css('border-color','');
+						}
+				var contact = $('#contact').val();
+				$('#contactno_buss').html(contact);
+				$('.proposal_div').css('display','block');
+				$('.signup_basic').css('display','none');
+				
+				
+		});
   
   
       $(document).on('keyup','#bussiness_name',function(){
@@ -898,40 +1086,72 @@ $(document).on('change','.upload_doc',function(){
 			   return true;
 			}
 		});
-$(document).on('change','#image',function(){ 
+
+/************ IMAGE FILE UPLOAD FOR BUSINESS *********************/
+
+$(document).on('change','#image',function(e){ 
 				var countFiles = $(this)[0].files.length;
 				var imgPath = $(this)[0].value;
 				var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
-				var image_holder = $("#image-holder");
+				var image_holder = $("#buss_image-holder");
+				var old_image = $("#buss_logo").attr("src");
 				
-				image_holder.empty();
+				//image_holder.empty();
 		
 				if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
 						if (typeof (FileReader) != "undefined") {		
 								//loop for each file selected for uploaded.
 								for (var i = 0; i < countFiles; i++) {
 										var reader = new FileReader();
-										reader.onload = function (e) {
-																				$("<img />", {
-																						"src": e.target.result,
-																						"class": "thumb-image",
-																						"height": "100px",
-																						"width": "150px"
-																				}).appendTo(image_holder);
+										var fileSize = this.files[0]; 
+										var sizeInMb = (fileSize.size/1024)/1024; 
+										var sizeLimit= 15;
+										if (sizeInMb > sizeLimit) {
+												$("#buss_logo").attr("src",'images/img11.jpg');
+												$('#buss_image-holder').html('File size must be less than 15MB');
+										}
+										else{
+												reader.onload = function (e) {
+														$("#buss_logo").attr("src",e.target.result);
+														$("#buss_logo").addClass("thumb-image");
+														$('#buss_logo').css({'height':'233px','width':'243px'}); 
+																				
+																				//$("<img />", {
+																				//		"src": e.target.result,
+																				//		"class": "thumb-image",
+																				//		"height": "100px",
+																				//		"width": "150px"
+																				//}).appendTo(image_holder);
+																				
 																		}
-										image_holder.show();
-										reader.readAsDataURL($(this)[0].files[i]);
+														$('#buss_image-holder').html('');
+														//image_holder.show();
+														reader.readAsDataURL($(this)[0].files[i]);
+										}	
 								}
-						}
-						else {
+								
+								var files = e.target.files,
+								filesLength = files.length;
+								
+								var f = files[0]
+								var fileReader = new FileReader();
+								fileReader.onload = (function(e) {
+								var file = e.target;
+								$("#imageHolder").html("<img src='"+e.target.result+"' class='imageThumb' title='"+file.name+"'/>");
+								});
+								fileReader.readAsDataURL(f);     	
+								
+						} else {
 								alert("This browser does not support FileReader.");
 						}
-				}
-				else {
+				} else {
 						alert("Please select only images");
 						$('#image').val('');
 				}
    });
+
+/************ IMAGE FILE UPLOAD FOR BUSINESS *********************/
+
 $(document).ready(function() {
     $('.investors').css('display','block');
 	$('.selling_your_company').css('display','none');
@@ -1061,90 +1281,150 @@ $(document).on('click','.looking_for',function(){
 	}
 	    }); 
 		});
+      
+//      $(document).on('keyup','#industry_name',function(){
+//var industry_name = $('#industry_name').val();
+//
+//   if(industry_name == ''){
+//	       $('#industry_name').css('border-color','red').focus();
+//		alert('industry name required');
+//               return false;
+//            }
+//	   $.ajax({
+//		    type: 'post',
+//		    data: {industry_name:$('#industry_name').val(),_token:CSRF_TOKEN},
+//		    url: BASE_URL+'/industory_name_unique',
+//		    success: function(data){
+//				    if (data != 0)
+//				    {
+//					$('#industry_name').css('border-color','red').focus();
+//					$('.industry_name_error').html('Industry Name exists. Please change Industry Name');
+//					$('#industry_name').val(' ');
+//				    return false;
+//				    }
+//				    else
+//				    {
+//					$('.industry_name_error').html(' ');
+//				    }
+//				    
+//		    }
+//				});  
+//	   
+//	    
+//});
+      
 $(document).on('click','#next3',function(){
 
-  if($(".looking_for:checked").val()=='investors')
-  {
-      if($('select#funds_req_currency').val()== null)
-      {
-       alert('Funds currency required');
-       $('select#funds_req_currency').css('border-color','red').focus();
-       return false;
-      }
-       if($('#enter_amt').val() == '')
-      {
-      $('#enter_amt').focus();
-       alert('Fund Amount required');
-       $('#enter_amt').css('border-color','red').focus();
-       return false;
-      }
-      if($('#equity_exchange').val() == '')
-      {
-      $('#equity_exchange').focus();
-       alert('equity exchange Amount required');
-       $('#equity_exchange').css('border-color','red').focus();
-       return false;
-      }
-      if($('#upload_proposal').val() == ''){
-	    alert('upload proposal required');
-	    $('#upload_proposal').css('border-color','red').focus();
-	     return false;
-	} 
-  }
-  if($(".looking_for:checked").val()=='selling_your_company') {
-    if($('select#sp_currency').val()== null)
-      {
-       alert('Selling Price currency required');
-       $('select#sp_currency').css('border-color','red').focus();
-       return false;
-      }
-       if($('#enter_sell_amt').val() == '')
-      {
-       alert('selling Amount required');
-       $('#enter_sell_amt').css('border-color','red').focus();
-       return false;
-      }
-      if($('select#cv_currency').val()== null)
-      {
-       alert('Company Valuation currency required');
-       $('select#cv_currency').css('border-color','red').focus();
-       return false;
-      }
-       if($('#cmp_val').val() == '')
-      {
-      $('#cmp_val').focus();
-       alert('Company Valuation Amount required');
-       $('#cmp_val').css('border-color','red').focus();
-       return false;
-      }
-      if($('#upload_proposal1').val() == ''){
-	    alert('upload proposal required');
-	    $('#upload_proposal1').css('border-color','red').focus();
-	     return false;
-	} 
-  }
+		if($(".looking_for:checked").val()=='investors') {
+				if($('select#funds_req_currency').val()== null){
+						alert('Funds currency required');
+						$('select#funds_req_currency').css('border-color','red').focus();
+						return false;
+				}
+				if($('select#funds_req_currency').val() != '') {
+						    $('select#funds_req_currency').css('border-color','');
+						}
+				if($('#enter_amt').val() == ''){
+						alert('Fund Amount required');
+						$('#enter_amt').css('border-color','red').focus();
+						return false;
+				}
+				if($('#enter_amt').val() != '') {
+						    $('#enter_amt').css('border-color','');
+						}
+				if($('#equity_exchange').val() == ''){
+						alert('equity exchange Amount required');
+						$('#equity_exchange').css('border-color','red').focus();
+						return false;
+				}
+				if($('#equity_exchange').val() != '') {
+						    $('#equity_exchange').css('border-color','');
+						}
+				if($('#upload_proposal').val() == ''){
+						alert('upload proposal required');
+						$('#upload_proposal').css('border-color','red').focus();
+						return false;
+				}
+				if($('#upload_proposal').val() != '') {
+						    $('#upload_proposal').css('border-color','');
+						}
+		}
+		
+		if($(".looking_for:checked").val()=='selling_your_company') {
+				if($('select#sp_currency').val()== null){
+						alert('Selling Price currency required');
+						$('select#sp_currency').css('border-color','red').focus();
+						return false;
+				}
+				if($('select#sp_currency').val() != '') {
+						    $('select#sp_currency').css('border-color','');
+						}
+				if($('#enter_sell_amt').val() == ''){
+						alert('selling Amount required');
+						$('#enter_sell_amt').css('border-color','red').focus();
+						return false;
+				}
+				if($('#enter_sell_amt').val() != '') {
+						    $('#enter_sell_amt').css('border-color','');
+						}
+				if($('select#cv_currency').val()== null){
+						alert('Company Valuation currency required');
+						$('select#cv_currency').css('border-color','red').focus();
+						return false;
+				}
+				if($('select#cv_currency').val() != '') {
+						    $('select#cv_currency').css('border-color','');
+						}
+				if($('#cmp_val').val() == ''){
+						$('#cmp_val').focus();
+						alert('Company Valuation Amount required');
+						$('#cmp_val').css('border-color','red').focus();
+						return false;
+				}
+				if($('#cmp_val').val() != '') {
+						    $('#cmp_val').css('border-color','');
+						}
+				if($('#upload_proposal1').val() == ''){
+						alert('upload proposal required');
+						$('#upload_proposal1').css('border-color','red').focus();
+						return false;
+				}
+				if($('#upload_proposal1').val() != '') {
+						    $('#upload_proposal1').css('border-color','');
+						}
+		}
 
     $('.proposal_div').css('display','none');
     $('.accounts_div').css('display','block');
     var val = $('.business_type:checked').val();
-    if (val == 'start_up' || val == 'business_ideas') {
-    $('.start_exist').css('display','block');
-    $('.business_ideas').css('display','none');
-    $('.accountsNext').css('display','block');
+    
+		if (val == 'start_up' || val == 'business_ideas') {
+				$('.start_exist').css('display','block');
+				$('.business_ideas').css('display','none');
+				$('.accountsNext').css('display','block');
     }
     if (val == 'existing_business') {
-    $('.start_exist').css('display','none');
-    $('.business_ideas').css('display','block');
-    $('.accountsNext').css('display','block');
+				$('.start_exist').css('display','none');
+				$('.business_ideas').css('display','block');
+				$('.accountsNext').css('display','block');
     }
-$('.basic_tab').removeClass('active_list').addClass('complete_list');
+	
+		$('.basic_tab').removeClass('active_list').addClass('complete_list');
     $('.proposal_tab').removeClass('active_list').addClass('complete_list');
     $('.funds_tab').addClass('active_list');
-  });
-   $(document).on('click','#prev4',function(){
- $('.proposal_div').css('display','block');
- $('.accounts_div').css('display','none');
- });
+});
+
+
+$(document).on('click','#prev4',function(){
+		$('.proposal_div').css('display','block');
+		$('.accounts_div').css('display','none');
+});
+
+$(document).on('click','#prev5',function(){
+		$('.business_otp_verify_div').css('display','none');
+		$('.accounts_div').css('display','block');
+});
+
 $(document).on('change','.sales_report',function(){
 			var ext = $('.sales_report').val().split('.').pop().toLowerCase();
 			var f=this.files[0];
@@ -1162,6 +1442,7 @@ $(document).on('change','.sales_report',function(){
 			}
 			else
 			{
+			     $('.salesReportName').html($(this).next('.customfile-filename').attr('title'));
 			   return true;
 			}
 		});
@@ -1228,47 +1509,87 @@ $(document).on('change','.supporting_documents',function(){
 
 $(document).on('click','#next4',function(){
      
-     var val = $('.business_type:checked').val();
+    var val = $('.business_type:checked').val();
 
- if (val == 'start_up' || val == 'business_ideas')
-  {
-      if($('#sales_report').val()== '')
-      {
-      $('#sales_report').focus();
-       alert('Sales Report required');
-       return false;
-      }
-      if($('#pll_report').val() == '')
-      {
-      $('#pll_report').focus();
-       alert('PLL report required');
-       return false;
-      }
-      if($('#valuation_report').val() == '')
-      {
-      $('#valuation_report').focus();
-       alert('valuation report required');
-       return false;
-      }
-  }
-  if (val == 'existing_business') {
-    if($('#enter_pv_amt').val() == '')
-      {
-      $('#enter_pv_amt').focus();
-       alert('Predicted Valuation');
-       return false;
-      }
-     if($('#supporting_documents').val()== '')
-      {
-      $('#supporting_documents').focus();
-       alert('supporting documents required');
-       return false;
-      }
-      
-  }
+		if (val == 'start_up' || val == 'business_ideas'){
+				if($('#sales_report').val()== ''){
+						$('#sales_report').focus();
+						alert('Sales Report required');
+						return false;
+				}
+				if($('#pll_report').val() == ''){
+						$('#pll_report').focus();
+						alert('PLL report required');
+						return false;
+				}
+				if($('#valuation_report').val() == ''){
+						$('#valuation_report').focus();
+						alert('valuation report required');
+						return false;
+				}
+		}
+		
+		if (val == 'existing_business') {
+				if($('#enter_pv_amt').val() == ''){
+						$('#enter_pv_amt').focus();
+						alert('Predicted Valuation');
+						return false;
+				}
+				if($('#supporting_documents').val()== ''){
+						$('#supporting_documents').focus();
+						alert('supporting documents required');
+						return false;
+				}
+		}
+		
+		$.ajax({
+		type: 'post',
+		data: {contact:$('#contact').val(),_token: csrf_token},
+		url: base_url+'buss_send_otp',
+		success: function(data){ 
+				if (data != 0){
+						otp = data;
+						
+						//$('.buss_verify_otp').css('display','none');
+						$('#hid_otp_val_business').val(otp);
+						
+						$('.basic_tab').removeClass('active_list').addClass('complete_list');
+						$('.proposal_tab').addClass('active_list');
+						
+						
+						//alert('OTP has been sent to your mobile for future verification.');
+						
+						//$('.buss_otp_status').html('OTP has been sent to your mobile please check.');
+						//$('.buss_otp_status').after('<div class="enter_otp"><input type="text" name="otp_value" id="otp_value"/><a href="javascript:void(0)" class="buss_verify_button">Verify</a></div>');
+				}
+				else{
+						
+						alert("Can't send sms please check your phone no.");
+						
+						
+						//$('.buss_otp_status').html("Can't send sms please check your phone no.");
+						//$('#buss_otp_verify').val(0);
+				}
+		},
+		error: function(xhr, textStatus, errorThrown){
+				
+				alert("Can't send sms please check your phone no.");
+				
+				
+				//$('.buss_otp_status').html("Can't send sms please check your phone no.");
+				//$('#buss_otp_verify').val(0);
+		}
+});
+		
+		$('.basic_tab').remove();
+		$('.proposal_tab').remove();
+		$('.funds_tab').remove();
+		$('.proposal_div').css('display','none');
+    $('.accounts_div').css('display','none');
+		$('.business_otp_verify_div').css('display','block');
  
-   $('#action').val('Process');
-    $('#business_form').submit();
+//		$('#action').val('Process');
+//    $('#business_form').submit();
   });
     
     
@@ -1351,88 +1672,109 @@ $(document).on('click','#next4',function(){
                 }
         });
     });
-    $(document).on('keyup','#email2',function(){
-    
-var email = $('#email2').val();
+		
+		/* Investor Signup EmaIL check */
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//$(document).on('blur','#email2',function(){
+		//		var email = $('#email2').val(); alert(email);
+		//		if(email== ''){ 
+		//				$('.email_error').css('color','red');
+		//				$('.email_error').html('Email cannot be blank');
+		//				return false;
+		//		}
+		//		if(IsEmail(email)==false){
+		//				$('.email_error').css('color','red');
+		//				$('.email_error').html('please enter correct email');
+		//				return false;
+		//		}
+		//		else{
+		//				$.ajax({
+		//						type: 'post',
+		//						data: {email:$('#email2').val(),_token: csrf_token},
+		//						url: base_url+'/invester_email_unique',
+		//						success: function(data){
+		//								if (parseInt(data) > 0){
+		//										$('.email_error').css('color','red');
+		//										$('.email_error').html('Email id already taken. Please select another email ID');
+		//										$('#investor_regi').prop( "disabled", true );
+		//								}
+		//								else if (data == 0){
+		//										$('.email_error').html('');
+		//										$('#investor_regi').prop( "disabled", false );
+		//								}
+		//						}
+		//				});
+		//		}
+		//});
+		//
+		
+		//$(document).on('blur','#password2',function(){
+		//		var pass = $('#password2').val();
+		//		var len = pass.length;
+		//		if(len < 1) {
+		//				$('.pass_error').css('color','red');
+		//				$('.pass_error').html('Password cannot be blank4');
+		//				return false;
+		//		}
+		//		if(len < 6) {
+		//				$('.pass_error').css('color','red');
+		//				$('.pass_error').html('Password cannot be less than 6 characters');
+		//				return false;
+		//		}
+		//		//else{
+		//		//		$('.pass_error').html('');
+		//		//		return true; 
+		//		//}
+		//		
+		//		if($('#password2').val() != $('#password_confirmation2').val()) {
+		//				$('.passconf_error').css('color','red');
+		//				$('.passconf_error').html('Password and Confirm Password does not match');
+		//				return false;
+		//		}
+		//		else{
+		//				$('.pass_error').html('');
+		//				$('.passconf_error').html('');
+		//				return true; 
+		//		}
+		//});
+		
+		//$(document).on('keyup','#password_confirmation2',function(){
+		//		var pass = $('#password2').val();
+		//		var len = pass.length;
+		//		  
+		//		if(len < 1) {
+		//				$('.pass_error').css('color','red');
+		//				$('.pass_error').html('Password cannot be blank5');
+		//				return false;
+		//		}
+		//
+		//		
+		//});
 
-   if(email== ''){
-	       $('.email_error').css('color','red');
-	       $('.email_error').html('email cannot be blank');
-               return false;
-            }
-   if(IsEmail(email)==false){
-                $('.email_error').css('color','red');
-	        $('.email_error').html('please enter correct email');
-                return false;
-            }
-	   $.ajax({
-		    type: 'post',
-		    data: {email:$('#email2').val(),_token: csrf_token},
-		    url: base_url+'/invester_email_unique',
-		    success: function(data){
-				    if (data != 0)
-				    {
-				    $('.email_error').css('color','red');
-				    $('.email_error').html('Email id already taken. Please select another email ID');
-				    $('#investor_regi').prop( "disabled", true );
-				    return false;
-				    }
-				    else if (data == 0)
-				    {
-					$('.email_error').html('');
-					$('#investor_regi').prop( "disabled", false );
-				    }
-		    }
-				});  
-	   
-	    
-});
-$(document).on('keyup','#password2',function(){
-var pass = $('#password2').val();
-   var len = pass.length;
-        if(len < 1) {
-           
-            $('.pass_error').css('color','red');
-	    $('.pass_error').html('Password cannot be blank');
-               return false;
-        }
-	if(len < 6) {
-           
-            $('.pass_error').css('color','red');
-	    $('.pass_error').html('Password cannot be less than 6 characters');
-               return false;
-        }
-	    else
-	    {
-	      $('.pass_error').html('');
-               return true; 
-	    }
-});
-$(document).on('keyup','#password_confirmation2',function(){
-var pass = $('#password2').val();
-   var len = pass.length;
-        
-       var len = pass.length;  
-        if(len < 1) {
-           
-            $('.pass_error').css('color','red');
-	    $('.pass_error').html('Password cannot be blank');
-               return false;
-        }
-         
-        if($('#password2').val() != $('#password_confirmation2').val()) {
-	
-	    $('.passconf_error').css('color','red');
-	    $('.passconf_error').html('Password and Confirm Password does not match');
-            return false;
-        }
-	    else
-	    {
-	      $('.pass_error').html('');
-	      $('.passconf_error').html('');
-               return true; 
-	    }
-});
+
+		
+		/* Investor Signup EmaIL check end */
+		
+		
+		
     
 });
 
@@ -1474,7 +1816,7 @@ $(document).ready(function(){
    });
 	
 $("#buss_logo2").click(function(){
-    $("#image").click();
+    $("#media").click();
    });
 $("#buss_logo3").click(function(){
     $("#add_file_1").click();
@@ -1540,10 +1882,9 @@ $("#buss_logo6").click(function(){
 								dataType: "json",
 								success: function(response){
 										if(response.id > 0){
-										    
 												window.location.href = redirectURl;
 										}
-										else{ 
+										else{
 												$('#errormsg').html('Login Failed!!');		
 										}
 								}
@@ -1608,4 +1949,6 @@ $(".fancybox2").fancybox();
     
 	
 });
+
+
 

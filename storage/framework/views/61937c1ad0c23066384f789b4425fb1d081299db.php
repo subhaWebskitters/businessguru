@@ -80,7 +80,7 @@
 <script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/waypoints.min.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/tinyscrollbar.js')); ?>"></script>    
 <script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/common.js')); ?>"></script>    
-
+<script  type="text/javascript" src="<?php echo e(asset('front_assets/ckeditor/ckeditor.js'); ?>"></script>
 		
 </head>
 

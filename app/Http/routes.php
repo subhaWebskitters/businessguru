@@ -14,7 +14,7 @@
 Route::group(['middleware' => ['web']], function () {    
         Route::any('/',                         array('as'=>'register',                 'uses'=>'RegisterController@index'));
         Route::any('save_invester_step',        array('as'=>'save_invester_step',       'uses'=>'InvesterController@signup_basic'));
-        Route::any('invester_email_unique',     array('as'=>'invester_email_unique',    'uses'=>'InvesterController@business_email_unique'));
+        Route::any('invester_email_unique',     array('as'=>'invester_email_unique',    'uses'=>'InvesterController@invester_email_unique'));
         Route::any('buss_name_unique',     array('as'=>'buss_name_unique',              'uses'=>'BusinessController@buss_name_unique'));
         Route::any('send_otp',                 array('as'=>'send_otp',                 'uses'=>'InvesterController@send_otp'));
         Route::any('verify_otp',               array('as'=>'verify_otp',               'uses'=>'InvesterController@verify_otp'));
@@ -46,7 +46,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::any('download/{type}/{file}',    array('as'=>'download',                      'uses'=>'BusinessController@downloadDoc'));
         Route::any('save_business_step',        array('as'=>'save_business_step'        ,    'uses'=>'BusinessController@signup'));
         Route::any('buss_send_otp/',            array('as'=>'buss_send_otp'             ,    'uses'=>'BusinessController@send_otp'));
-        Route::any('buss_verify_otp/',          array('as'=>'buss_verify_otp'           ,    'uses'=>'BusinessController@verify_otp'));
+        Route::any('buss_verify_otp',          array('as'=>'buss_verify_otp'           ,    'uses'=>'BusinessController@buss_verify_otp'));
         Route::any('business_email_unique',       array('as'=>'business_email_unique'     ,  'uses'=>'BusinessController@business_email_unique'));
         Route::any('business_evaluation_email',   array('as'=>'business_evaluation_email' ,  'uses'=>'BusinessController@business_evaluation_email'));
         Route::any('business_image_upload',       array('as'=>'business_image_upload'     ,  'uses'=>'BusinessController@do_image_upload'));
@@ -59,8 +59,8 @@ Route::group(['middleware' => ['web']], function () {
         Route::any('do_business_forgotpassword/', array('as'=>'do_business_forgotpassword',  'uses'=>'BusinessController@do_forgotpassword'));
         Route::any('business_editprofile/{id}',   array('as'=>'business_editprofile',        'uses'=>'BusinessController@editprofile'));
         Route::any('business_updateprofile/',     array('as'=>'business_updateprofile',      'uses'=>'BusinessController@updateprofile'));
-        Route::any('business_changepassword/',    array('as'=>'business_changepassword',     'uses'=>'BusinessController@changepassword'));
-        Route::any('business_do_changepassword/', array('as'=>'business_do_changepassword',  'uses'=>'BusinessController@do_changepassword'));
+        Route::any('business_changepassword/',    array('as'=>'business_changepassword',     'uses'=>'BusinessController@business_changepassword'));
+        Route::any('business_do_changepassword/', array('as'=>'business_do_changepassword',  'uses'=>'BusinessController@business_do_changepassword'));
         Route::any('business_register/',          array('as'=>'business_register',           'uses'=>'BusinessController@business_register'));
 
         Route::any('contact_email',               array('as'=>'contact_email',              'uses'=>'CmsController@contact_email'));
@@ -271,11 +271,12 @@ Route::group(array('prefix'=>'admin','namespace'=>'admin','middleware' => 'admin
         
         Route::any('/industries',                       array('as' => 'industries_list', 'uses'=>'IndustryController@index' ));
         Route::any('/industries/edit/{id}',             array('as' => 'industry_edit', 'uses'=>'IndustryController@edit' ));
+        Route::any('/industries/delete/{id}',             array('as' => 'industry_delete', 'uses'=>'IndustryController@delete' ));
         Route::any('/industries/add',                   array('as' => 'industry_add', 'uses'=>'IndustryController@add' ));
         
         Route::any('/business_proposal',                array('as' => 'business_proposal', 'uses'=>'BusinessProposalController@index' ));
         Route::post('/business_proposal/set-status',    array('as' => 'business_proposal_set_status', 'uses'=>'BusinessProposalController@set_status' ));
-        
+        Route::any('industory_name_unique',   array('as'=>'industory_name_unique' ,  'uses'=>'IndustryController@industory_name_unique'));
         
         //Route::any('{slug}',                      array('as'=>'cms',                        'uses'=>'CmsController@index'));
     });

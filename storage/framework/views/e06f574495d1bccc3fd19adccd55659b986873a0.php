@@ -43,7 +43,7 @@ body{margin-top:50px;}
 		<div class="main_container clear">
 		
 				<div class="fnctn">
-						<ul class="clear">
+						<ul class="clear industryList">
 								<?php if($allindustryData->count() > 0): ?>
 										<?php foreach($allindustryData as $ivstD): ?>
 												<?php /**/
@@ -83,8 +83,13 @@ body{margin-top:50px;}
 																<div class="owl-vwd">
 																		<article class="single-blog clear">
 																				<div class="image">
-																						<?php echo e(Html::image(asset('upload/businessuser/recentthumb/'.$businessImage),$businessImage)); ?>
+																						<?php if(!$businessImage): ?>
+																								<?php echo e(Html::image(asset('upload/businessuser/thumb/311200.jpg'))); ?>
 
+																						<?php else: ?>
+																								<?php echo e(Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage)); ?>
+
+																						<?php endif; ?>
 																				</div>
 																				<div class="entry-header">
 																						<h4><a href="<?php echo e(URL::route('business_details',$businessSlug)); ?>"><?php echo e($businessName); ?></a></h4>
@@ -180,16 +185,23 @@ body{margin-top:50px;}
 																						/**/ ?>
 																						<article class="single-blog clear">
 																								<div class="site-left">
+																								<?php if(!$businessImage): ?>
+																										<?php echo e(Html::image(asset('upload/businessuser/thumb/311200.jpg'))); ?>
+
+																								<?php else: ?>
 																										<?php echo e(Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage)); ?>
 
+																								<?php endif; ?>
 																								</div>
 																								<div class="site-content">
 																										<div class="entry-header">
-																												<h3><a href="<?php echo e(URL::route('business_details',$businessSlug)); ?>"><?php echo e($businessName); ?></a></h3>
-																												<span>By : <?php echo e($investorName); ?></span>
+											<div class="businessInvestType clear">																	<h3><a href="<?php echo e(URL::route('business_details',$businessSlug)); ?>"><?php echo e($businessName); ?></a></h3><span><?php echo e('Looking For '.$bsD->investor_type); ?></span>
+											</div>
+																												<!--<span>By : <?php echo e($investorName); ?></span>-->
 																										</div>
 																										<div class="entry-content">
-																												<p><?php echo e(substr($businessDescription,0,80)."...."); ?></p>
+																												
+																												<p><?php echo substr(strip_tags($businessDescription),0,80)."...."; ?></p>
 																												<div class="blg-ft clear">
 																														<div class="add">
 																																<a href="#" class="lct"><?php echo e($businessAddress); ?></a>
@@ -204,9 +216,7 @@ body{margin-top:50px;}
 																		<?php else: ?>
 																				<div class="well" style="color:red">No Record Found</div>
 																		<?php endif; ?>
-																		<div class="pagination-panel">
-																				<?php echo $businessData->render(); ?>			
-																		</div>
+																		
 																</div>
 																<input type="hidden" name="currentpagelb" id="currentpagelb" value="1">
 														</div>

@@ -16,4 +16,15 @@ class BusinessProposal extends Model
     {
         return $this->hasMany('App\investors','id');
     }
+    
+    
+    function Business()
+    {
+        return $this->belongsTo('App\Business','business_id');
+    }
+    
+    function Investor()
+    {
+        return $this->belongsTo('App\investors','investor_id');
+    }     
 }

@@ -15,16 +15,21 @@
 				/**/ ?>
 				<article class="single-blog clear">
 						<div class="site-left">
-								<?php echo e(Html::image(asset('upload/businessuser/'.$businessImage),$businessImage,array('height'=>'100','width'=>'100'))); ?>
+								<?php if(!$businessImage): ?>
+										<?php echo e(Html::image(asset('upload/businessuser/thumb/311200.jpg'))); ?>
 
+								<?php else: ?>
+										<?php echo e(Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage)); ?>
+
+								<?php endif; ?>
 						</div>
 						<div class="site-content">
 								<div class="entry-header">
 										<h3><a href="<?php echo e(URL::route('business_details',$businessID)); ?>"><?php echo e($businessName); ?></a></h3>
-										<span>By : <?php echo e($investorName); ?></span>
+										<!--<span>By : <?php echo e($investorName); ?></span>-->
 								</div>
 								<div class="entry-content">
-										<p><?php echo e(substr($businessDescription,0,80)."...."); ?></p>
+										<p><?php echo substr(strip_tags($businessDescription),0,80)."...."; ?></p>
 										<div class="blg-ft clear">
 												<div class="add">
 														<a href="#" class="lct"><?php echo e($businessAddress); ?></a>
@@ -36,6 +41,6 @@
 						</div>
 				</article>
 		<?php endforeach; ?>
-<?php else: ?>
-		<div class="well" style="color:red">No Record Found</div>
+		<?php else: ?>
+				<div class="well" style="color:red">No Record Found</div>
 <?php endif; ?>

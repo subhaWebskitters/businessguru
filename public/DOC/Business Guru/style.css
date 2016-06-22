@@ -3530,57 +3530,6 @@ height: 20px; content: "";}
 		margin-left: 0;
 	}
 
-	.sidebar img.alignright,
-	.sidebar .wp-caption.alignright {
-		margin-right: 0;
-	}
-
-	.error404 .page-header {
-		margin-left: auto;
-		max-width: 604px;
-		width: 100%;
-	}
-
-	.archive-header,
-	.search .page-header,
-	.archive .page-header,
-	.blog .page-header,
-	.error404 .page-content,
-	.search .page-content,
-	.archive .page-content,
-	.attachment .entry-header,
-	.attachment .entry-content,
-	.post-navigation .nav-links,
-	.sidebar .site-info,
-	.site-footer .widget-area {
-		padding-left: 20px;
-		padding-right: 20px;
-	}
-
-	.error404 .page-title {
-		font-size: 24px;
-		padding: 180px;
-	}
-
-	.error404 .page-title:before {
-		font-size: 554px;
-	}
-
-	.attachment .image-navigation {
-		max-width: 724px;
-	}
-
-	.image-navigation .nav-previous,
-	.image-navigation .nav-next {
-		position: static;
-	}
-
-	.site-main .widget-area {
-		margin-right: 60px;
-	}
-}
-
-
 @media (max-width: 1023px) {
 	.main_container{max-width: 740px;}
 	.two_img_inner h2{font-size: 34px;}

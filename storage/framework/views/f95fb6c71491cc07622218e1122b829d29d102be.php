@@ -37,8 +37,6 @@
 
 		    <?php echo Form::hidden('type','Investor',array('id'=>'type')); ?>
 
-		    <?php echo Form::hidden('action','Process',array('id'=>'hidval')); ?>
-
 		    <div class="tab3_inner">
 		      <h2>Change Your Password</h2>
 		      
@@ -59,11 +57,11 @@
 		
 		     <div class="tab_form clear">
 			<div class="tab_form_left full_tab">
-			  <label>Current Password</label>
+			  <label>New Password</label>
 			  <div class="one_tab_inner">
 			    <div>
 			      
-			      <?php echo Form::password('password','',array('id'=>'password','placeholder'=>'Current Password','class'=>'form-control required')); ?>
+			      <?php echo Form::password('password','',array('placeholder'=>'New Password','class'=>'form-control required')); ?>
 
 			    </div>
 				     
@@ -120,21 +118,18 @@ $(document).ready(function(){
 						},
 						password: {
 								required: true
-								
-								
 						},
 						password_confirm: {
 								required: true,
-								equalTo: "#password"
+								equalTo: '[name="password"]'
 						},
-						
-
 				},
 				messages: {
-						old_password: 	   "Please enter Old Password.",
-						password: 	   "Please enter a password.",
-						password_confirm: {  required :"Please re-type Password.",
-								     equalTo  : "Password does not match."
+						old_password: "Please enter Old Password.",
+						password: 	  "Please enter a password.",
+						password_confirm: {
+								required :"Please re-type Password.",
+								equalTo  : "Password does not match."
 						},
 						
 				},
@@ -142,8 +137,6 @@ $(document).ready(function(){
 				    form.submit();
 				}
 		});
-		
-		
 });
 </script>
 <?php $__env->stopSection(); ?>

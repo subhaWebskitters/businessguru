@@ -40,11 +40,11 @@
 	  <ul>
 	    <li>
 	      <div class="img_box">&nbsp;</div>
-	      <span>Custoamer Name</span>
+	      <span>Customer Name</span>
 	    </li>
 	    <li>
 	      <div class="img_box">&nbsp;</div>
-	      <span>Custoamer Name</span>
+	      <span>Customer Name</span>
 	    </li>
 	  </ul>
 	</div>
@@ -55,7 +55,7 @@
 	/**/ ?>
 						
 	<?php if($investor_id == '' && $buss_id == ''): ?>  
-	<div class="business">
+	<div class="business businessGetStarted">
 	  <h2>Get Started Now</h2>
 	  <ul>
 	    <li class="investors1"><a href="javascript:void(0);"><h2>Business Investors</h2><span>I want to invest</span></a></li>

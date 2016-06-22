@@ -2,6 +2,7 @@
 
 <?php $__env->startSection('content'); ?>
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
+     
         <div class="page-header pull-left">
             <div class="page-title">Edit</div>
         </div>
@@ -17,6 +18,14 @@
          
         </ol>
         <div class="clearfix"></div>
+            <?php if(count($errors)>0): ?>
+                            <?php foreach($errors->all() as $error): ?>
+                                <p class="text-red"><?php echo e($error); ?></p>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        <?php if(Session::has('errMsg')): ?>
+                        <p class="text-red"><?php echo e(Session::get('errMsg')); ?></p>
+                        <?php endif; ?>
     </div>
         
     <div class="page-content">
@@ -25,24 +34,17 @@
                 <div class="panel panel-yellow">
                     <div class="panel-heading">Industry Update</div>
                     <div class="panel-body pan industryview">                                    
-                        <?php if(count($errors)>0): ?>
-                            <?php foreach($errors->all() as $error): ?>
-                                <p class="text-red"><?php echo e($error); ?></p>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                        <?php if(Session::has('errMsg')): ?>
-                        <p class="text-red"><?php echo e(Session::get('errMsg')); ?></p>
-                        <?php endif; ?>
-                        <?php echo e(Form::open(array('route'=>array('industry_edit',$id)))); ?>
+                       
+                        <?php echo Form::open(array('route'=>array('industry_edit',$id),'class'=>'form-validate')); ?>
 
-                            
                             <div class="form-body pal">
                                 <div class="form-group">
                                     <label for="sitesettings_lebel" class="col-md-3 control-label">Industry Name</label>
                                     <div class="col-md-9">
                                         <div class="input-icon right">
-                                            <?php echo e(Form::text('industry_name',$industry_details['industry_name'],array('class'=>'form-control required'))); ?>
+                                            <?php echo e(Form::text('industry_name',$industry_details['industry_name'],array('class'=>'form-control required','id'=>'industry_name'))); ?>
 
+                                            <span class="industry_name_error" style="color:red;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -77,5 +79,6 @@
             </div>
         </div>
     </div>
+
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('admin/layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

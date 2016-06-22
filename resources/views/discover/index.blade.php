@@ -19,23 +19,23 @@
 						@endforeach
 				</div>
 		</div>
-		<div id="main" class="clear dash-page"> 
+		<div id="main" class="clear dash-page discoverMainPage"> 
 				<div class="main_container clear">
 						<div class="fnctn">
-								<ul class="clear">
+								<ul class="clear industryList">
 										@if($allindustryData->count() > 0)
 										@foreach($allindustryData as $ivstD)
 												{{--*/
 												$industryID = $ivstD->id;
 												$industryName = $ivstD->industry_name;
 												/*--}}
-												<li><a item="{{$industryID}}" class="{{strtolower($industryName)}} discoverCat">{{$industryName}}</a></li>
+												<li style="cursor:pointer;"><a item="{{$industryID}}" class="{{strtolower($industryName)}} discoverCat">{{$industryName}}</a></li>
 										@endforeach
 								@endif
 								</ul>
 						</div>
 						<div class="discover-details clear">	
-								<div class="menu-listing-left menu-listing">
+								<div class="menu-listing-left menu-listing discoverPopularListing">
 										<div class="main-blog">
 												<h3>Popular listings</h3>
 												<div id="scrollbar4">
@@ -64,7 +64,11 @@
 																				
 																								<article class="single-blog clear">
 																										<div class="image">
-																										{{ Html::image(asset('upload/businessuser/popularthumb/'.$businessImage),$businessImage) }}
+																										@if (!$businessImage)
+																												{{ Html::image(asset('upload/businessuser/popularthumb/229152.jpg')) }}
+																										@else
+																												{{ Html::image(asset('upload/businessuser/popularthumb/'.$businessImage),$businessImage) }}
+																										@endif
 																										</div>
 																										<div class="entry-header">
 																												<h4><a href="{{URL::route('discover_details',$businessSlug)}}">{{$businessName}}</a></h4>
@@ -85,7 +89,7 @@
 												</div>
 										</div>
 								</div>
-								<div class="menu-listing-right menu-listing">
+								<div class="menu-listing-right menu-listing  discoverPopularListing">
 										<div class="main-blog">
 												<h3>Latest Business Listings</h3>
 												<div id="scrollbar3">
@@ -97,7 +101,7 @@
 																</div>
 														</div>
 														<div class="viewport">
-																<div class="overview">
+																<div class="overview discoverPopularListing">
 																		<div id="blogdiscover" class="blog-page blg-cmn">
 																				@if(count($businessData) >0)
 																						@foreach($businessData as $bsD)
@@ -110,17 +114,22 @@
 																										$businessDescription = $bsD->business_description;
 																										$businessAddress = $bsD->registered_address;
 																										$listedDate = date('l jS \of F Y h:i:s A',strtotime($bsD->created_at));
-																								/*--}} 
+																								/*--}}
 																								<article class="single-blog clear">
 																										<div class="site-left">
-																												{{ Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage) }}
+																												@if (!$businessImage)
+																														{{ Html::image(asset('upload/businessuser/thumb/311200.jpg')) }}
+																												@else
+																														{{ Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage) }}
+																												@endif
 																										</div>
 																										<div class="site-content">
 																												<div class="entry-header">
-																														<h3><a href="{{URL::route('discover_details',$businessSlug)}}">{{$businessName}}</a></h3>
+										<div class="businessInvestType clear">																<h3><a href="{{URL::route('discover_details',$businessSlug)}}">{{$businessName}}</a></h3><span>{{'Looking For '.$bsD->investor_type}}</span>
+										</div>
 																												</div>
 																												<div class="entry-content">
-																														<p>{{substr($businessDescription,0,80)."...."}}</p>
+																														<p>{!! substr(strip_tags($businessDescription),0,80)."...." !!}</p>
 																														<div class="blg-ft clear">
 																																<div class="add">
 																																		<a href="#" class="lct">{{$businessAddress}}</a>
@@ -130,8 +139,9 @@
 																														</div>
 																												</div>
 																										</div>
-																										
 																								</article>
+
+																								
 																						@endforeach
 																				@else
 																						<article class="single-blog clear"><div class="well" style="color:red">No Record Found</div></article>
@@ -153,7 +163,7 @@
 						@if($investor_id == '' && $buss_id == '')	
 						<div class="block5">
 								<div class="main_container center">
-									<div class="business">
+									<div class="business businessGetStarted">
 										<h2>Get Started Now</h2>
 										<ul>
 										<li class="investors1"><a href="javascript:void(0);"><h2>Business Investors</h2><span>I want to invest</span></a></li>

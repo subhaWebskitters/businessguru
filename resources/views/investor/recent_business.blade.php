@@ -44,7 +44,7 @@ body{margin-top:50px;}
 		<div class="main_container clear">
 		
 				<div class="fnctn">
-						<ul class="clear">
+						<ul class="clear industryList">
 								@if($allindustryData->count() > 0)
 										@foreach($allindustryData as $ivstD)
 												{{--*/
@@ -125,15 +125,19 @@ body{margin-top:50px;}
 																						/*--}}
 																						<article class="single-blog clear">
 																								<div class="site-left">
-																										{{ Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage) }}
+																										@if (!$businessImage)
+																												{{ Html::image(asset('upload/businessuser/thumb/311200.jpg')) }}
+																										@else
+																												{{ Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage) }}
+																										@endif
 																								</div>
 																								<div class="site-content">
 																										<div class="entry-header">
 																												<h3><a href="{{URL::route('business_details',$businessSlug)}}">{{$businessName}}</a></h3>
-																												<span>By : {{$investorName}}</span>
+																												<!--<span>By : {{$investorName}}</span>-->
 																										</div>
 																										<div class="entry-content">
-																												<p>{{substr($businessDescription,0,80)."...."}}</p>
+																												<p>{!!substr(strip_tags($businessDescription),0,80)."...."!!}</p>
 																												<div class="blg-ft clear">
 																														<div class="add">
 																																<a href="#" class="lct">{{$businessAddress}}</a>
@@ -148,9 +152,7 @@ body{margin-top:50px;}
 																		@else
 																				<div class="well" style="color:red">No Record Found</div>
 																		@endif
-																		<div class="pagination-panel">
-																				{!! $businessData->render() !!}			
-																		</div>
+																		
 																</div>
 																<input type="hidden" name="currentpagelb" id="currentpagelb" value="1">
 														</div>

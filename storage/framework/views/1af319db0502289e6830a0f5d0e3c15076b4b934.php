@@ -28,6 +28,9 @@
                 <?php if(Session::has('sucMsg')): ?>
                     <p class="text-green"><?php echo e(Session::get('sucMsg')); ?></p>
                 <?php endif; ?>
+		<?php if(Session::has('errMsg')): ?>
+                    <p class="text-red"><?php echo e(Session::get('errMsg')); ?></p>
+                <?php endif; ?>
                     <?php echo e(Form::open(array('route'=>'industries_list','class'=>'form-validate','id'=>'searchForm') )); ?>
 
                         <div class="col-lg-3">
@@ -75,7 +78,7 @@
                                                         edit 
                                                     </button>
                                                 </a>
-                                                <a title="delete" class="tablectrl_small bDefault tipS" href="#">
+                                                <a title="delete" onclick="return confirm('Are sure! Do you want to delete with its all relevent data?');" class="tablectrl_small bDefault tipS" href="<?php echo e(URL::route('industry_delete',$industry['id'])); ?>">
                                                     <button class="btn btn-danger btn-xs" type="button"><i class="fa fa-trash-o"></i>&nbsp;
                                                         delete 
                                                     </button>

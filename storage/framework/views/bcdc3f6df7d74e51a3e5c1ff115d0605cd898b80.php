@@ -33,6 +33,4 @@
 						
 				</article>
 		<?php endforeach; ?>
-<?php else: ?>
-		<article class="single-blog clear"><div class="well" style="color:red">No Record Found</div></article>
 <?php endif; ?>

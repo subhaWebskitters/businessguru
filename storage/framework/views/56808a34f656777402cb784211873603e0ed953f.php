@@ -5,7 +5,11 @@
     <body>
         <table border="0" cellpadding="2" cellspacing="0">
             <tr>
-                <td>Thanks for register in our website.</td>
+                <td>Hi,</td>
+                    <br>
+            </tr> 
+            <tr>
+                <td>Thank you for registering in our website.</td>
                 <td>&nbsp;</td>
             </tr>
             <tr>
@@ -28,6 +32,16 @@
                 <td>Password:</td>
                 <td><?php echo e($password); ?></td>
             </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    Thanks & Regards
+                    <br>
+                    Business Guru Team
+                </td>
+            </tr>  
         </table>
     </body>
 </html>

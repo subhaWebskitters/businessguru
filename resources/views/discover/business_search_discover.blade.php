@@ -12,14 +12,18 @@
 				/*--}} 
 				<article class="single-blog clear">
 						<div class="site-left">
-								{{ Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage) }}
+								@if (!$businessImage)
+										{{ Html::image(asset('upload/businessuser/thumb/311200.jpg')) }}
+								@else
+										{{ Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage) }}
+								@endif
 						</div>
 						<div class="site-content">
 								<div class="entry-header">
 										<h3><a href="{{URL::route('discover_details',$businessSlug)}}">{{$businessName}}</a></h3>
 								</div>
 								<div class="entry-content">
-										<p>{{substr($businessDescription,0,80)."...."}}</p>
+										<p>{!! substr(strip_tags($businessDescription),0,80)."...." !!}</p>
 										<div class="blg-ft clear">
 												<div class="add">
 														<a href="#" class="lct">{{$businessAddress}}</a>
@@ -29,9 +33,6 @@
 										</div>
 								</div>
 						</div>
-						
 				</article>
 		@endforeach
-@else
-		<article class="single-blog clear"><div class="well" style="color:red">No Record Found</div></article>
 @endif

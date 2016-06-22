@@ -18,23 +18,23 @@
 						<?php endforeach; ?>
 				</div>
 		</div>
-		<div id="main" class="clear dash-page"> 
+		<div id="main" class="clear dash-page discoverMainPage"> 
 				<div class="main_container clear">
 						<div class="fnctn">
-								<ul class="clear">
+								<ul class="clear industryList">
 										<?php if($allindustryData->count() > 0): ?>
 										<?php foreach($allindustryData as $ivstD): ?>
 												<?php /**/
 												$industryID = $ivstD->id;
 												$industryName = $ivstD->industry_name;
 												/**/ ?>
-												<li><a item="<?php echo e($industryID); ?>" class="<?php echo e(strtolower($industryName)); ?> discoverCat"><?php echo e($industryName); ?></a></li>
+												<li style="cursor:pointer;"><a item="<?php echo e($industryID); ?>" class="<?php echo e(strtolower($industryName)); ?> discoverCat"><?php echo e($industryName); ?></a></li>
 										<?php endforeach; ?>
 								<?php endif; ?>
 								</ul>
 						</div>
 						<div class="discover-details clear">	
-								<div class="menu-listing-left menu-listing">
+								<div class="menu-listing-left menu-listing discoverPopularListing">
 										<div class="main-blog">
 												<h3>Popular listings</h3>
 												<div id="scrollbar4">
@@ -63,8 +63,13 @@
 																				
 																								<article class="single-blog clear">
 																										<div class="image">
-																										<?php echo e(Html::image(asset('upload/businessuser/popularthumb/'.$businessImage),$businessImage)); ?>
+																										<?php if(!$businessImage): ?>
+																												<?php echo e(Html::image(asset('upload/businessuser/popularthumb/229152.jpg'))); ?>
 
+																										<?php else: ?>
+																												<?php echo e(Html::image(asset('upload/businessuser/popularthumb/'.$businessImage),$businessImage)); ?>
+
+																										<?php endif; ?>
 																										</div>
 																										<div class="entry-header">
 																												<h4><a href="<?php echo e(URL::route('discover_details',$businessSlug)); ?>"><?php echo e($businessName); ?></a></h4>
@@ -85,7 +90,7 @@
 												</div>
 										</div>
 								</div>
-								<div class="menu-listing-right menu-listing">
+								<div class="menu-listing-right menu-listing  discoverPopularListing">
 										<div class="main-blog">
 												<h3>Latest Business Listings</h3>
 												<div id="scrollbar3">
@@ -97,7 +102,7 @@
 																</div>
 														</div>
 														<div class="viewport">
-																<div class="overview">
+																<div class="overview discoverPopularListing">
 																		<div id="blogdiscover" class="blog-page blg-cmn">
 																				<?php if(count($businessData) >0): ?>
 																						<?php foreach($businessData as $bsD): ?>
@@ -110,18 +115,24 @@
 																										$businessDescription = $bsD->business_description;
 																										$businessAddress = $bsD->registered_address;
 																										$listedDate = date('l jS \of F Y h:i:s A',strtotime($bsD->created_at));
-																								/**/ ?> 
+																								/**/ ?>
 																								<article class="single-blog clear">
 																										<div class="site-left">
-																												<?php echo e(Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage)); ?>
+																												<?php if(!$businessImage): ?>
+																														<?php echo e(Html::image(asset('upload/businessuser/thumb/311200.jpg'))); ?>
 
+																												<?php else: ?>
+																														<?php echo e(Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage)); ?>
+
+																												<?php endif; ?>
 																										</div>
 																										<div class="site-content">
 																												<div class="entry-header">
-																														<h3><a href="<?php echo e(URL::route('discover_details',$businessSlug)); ?>"><?php echo e($businessName); ?></a></h3>
+										<div class="businessInvestType clear">																<h3><a href="<?php echo e(URL::route('discover_details',$businessSlug)); ?>"><?php echo e($businessName); ?></a></h3><span><?php echo e('Looking For '.$bsD->investor_type); ?></span>
+										</div>
 																												</div>
 																												<div class="entry-content">
-																														<p><?php echo e(substr($businessDescription,0,80)."...."); ?></p>
+																														<p><?php echo substr(strip_tags($businessDescription),0,80)."...."; ?></p>
 																														<div class="blg-ft clear">
 																																<div class="add">
 																																		<a href="#" class="lct"><?php echo e($businessAddress); ?></a>
@@ -131,8 +142,9 @@
 																														</div>
 																												</div>
 																										</div>
-																										
 																								</article>
+
+																								
 																						<?php endforeach; ?>
 																				<?php else: ?>
 																						<article class="single-blog clear"><div class="well" style="color:red">No Record Found</div></article>
@@ -154,7 +166,7 @@
 						<?php if($investor_id == '' && $buss_id == ''): ?>	
 						<div class="block5">
 								<div class="main_container center">
-									<div class="business">
+									<div class="business businessGetStarted">
 										<h2>Get Started Now</h2>
 										<ul>
 										<li class="investors1"><a href="javascript:void(0);"><h2>Business Investors</h2><span>I want to invest</span></a></li>

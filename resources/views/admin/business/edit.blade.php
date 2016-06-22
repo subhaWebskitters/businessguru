@@ -62,7 +62,7 @@
 						@endif
 				    </div>
 				    <div class="form-group col-md-12">
-					<label class="col-md-3 control-label" for="inputFirstName"><h5><b>ACTA Number</b></h5></label>
+					<label class="col-md-3 control-label" for="inputFirstName"><h5><b>ACRA Number</b></h5></label>
 					<div class="col-md-6">					    
 					   {{$details->acta_number}}
 					</div>

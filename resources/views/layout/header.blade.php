@@ -21,7 +21,15 @@ $setval = '';
     @if($investor_id != '' || $buss_id != '')
     <div class="upper_tab clear" style="display:block;">
 		<ul>
-				<li class="funds_tab"><a href="{{URL::route('changepassword')}}">Change Password</a></li>
+				<li class="funds_tab">
+						@if($investor_id != '')
+								<a href="{{URL::route('changepassword')}}">
+						@elseif($buss_id != '')
+								<a href="{{URL::route('business_changepassword')}}">
+						@endif
+								Change Password
+						</a>
+				</li>
 				  
 				@if($investor_id == '' && $buss_id != '')  
 				  <li class="funds_tab"><a href="{{URL::route('business_dashboard')}}">Edit Profile</a></li>
@@ -49,11 +57,11 @@ $setval = '';
 	  </div>
 	</nav>
       </div>
-      <div class="search_sec">
-	{!! Form::open(array('route'=>'discover','class'=>'form-validate','novalidate','enctype'=>'multipart/form-data')) !!}
-	  {!! Form::text('search',$setval,array('class'=>"form-control required", 'placeholder'=>"Search here", 'id'=>"searchHeader")) !!}
-	  {!! Form::submit('Save', array('class' => 'btn')) !!}
-	{!! Form::close() !!}
-      </div>
+		<div class="search_sec">
+				{!! Form::open(array('route'=>'investor_dashboard','class'=>'form-validate','novalidate','enctype'=>'multipart/form-data')) !!}
+						{!! Form::text('search',$setval,array('class'=>"form-control required", 'placeholder'=>"Search here", 'id'=>"searchHeader")) !!}
+						{!! Form::submit('Save', array('class' => 'btn')) !!}
+				{!! Form::close() !!}
+		</div>
     </div>
   </header>

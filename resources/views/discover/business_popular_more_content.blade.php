@@ -1,31 +1,30 @@
 @if(count($popularData) >0)
 		@foreach($popularData as $pData)
 				{{--*/
-				$investorID = $pData->investor_id;
-				$investorName = $pData->name;
-				$businessID = $pData->business_id;
+				$businessID = $pData->id;
 				$businessSlug = $pData->business_slug;
 				$businessName = $pData->business_name;
 				$businessImage = $pData->business_logo;
-				$industryName = $pData->industry_name;
+				$industryName = $pData->category_list;
 				$businessDescription = $pData->business_description;
 				$businessAddress = $pData->registered_address;
-				$listedDate = date('l jS \of F Y h:i:s A',strtotime($pData->listed_date));
+				$listedDate = date('l jS \of F Y h:i:s A',strtotime($pData->created_at));
 				/*--}} 		
-
 				<article class="single-blog clear">
 						<div class="image">
-						{{ Html::image(asset('upload/businessuser/thumb/'.$businessImage),$businessImage,array('height'=>'152','width'=>'229')) }}
+						@if (!$businessImage)
+								{{ Html::image(asset('upload/businessuser/popularthumb/229152.jpg')) }}
+						@else
+								{{ Html::image(asset('upload/businessuser/popularthumb/'.$businessImage),$businessImage) }}
+						@endif
 						</div>
 						<div class="entry-header">
-								<h4><a href="{{URL::route('business_details',$businessSlug)}}">{{$businessName}}</a></h4>
+								<h4><a href="{{URL::route('discover_details',$businessSlug)}}">{{$businessName}}</a></h4>
 						</div>
 						<div class="entry-header">
 								<a href="{{URL::route('discover_details',$businessSlug)}}" class="lmr">learn more</a>
-								<p>{{substr($businessDescription,0,50)."...."}}</p>
+								<p>{!! substr($businessDescription,0,50)."...." !!}</p>
 						</div>
 				</article>
 		@endforeach
-@else
-		<article class="single-blog clear"><div class="well" style="color:red">No Record Found</div></article>
 @endif

@@ -74,7 +74,7 @@
 
 <?php echo Form::hidden('action','Process',array('id'=>'action')); ?>
 
-	    <?php echo Form::text('first_name','',array('id'=>'first_name','placeholder'=>'First Name*','class'=>'form-control required error2','required' => 'required')); ?>
+	    <?php echo Form::text('first_name','',array('id'=>'first_name','placeholder'=>'Name*','class'=>'form-control required error2','required' => 'required')); ?>
 
 	    <?php echo Form::email('email','',array('id'=>'email','placeholder'=>'Email Address*','class'=>'form-control required error2','required' => 'required')); ?>
 
@@ -97,7 +97,7 @@
     <?php if($investor_id == '' && $buss_id == ''): ?>
     <div class="block5">
       <div class="main_container center">
-	<div class="business">
+	<div class="business businessGetStarted">
 	  <h2>Get Started Now</h2>
 	  <ul>
 	    <li class="investors1"><a href="javascript:void(0);"><h2>Business Investors</h2><span>I want to invest</span></a></li>
@@ -131,7 +131,7 @@ $(document).ready(function(){
 
 				},
 				messages: {
-						first_name: 	   "Please enter First Name",
+						first_name: 	   "Please enter Name",
 						email: 		   "Please enter a valid email address",
 						organisation_name: "Please enter organisation_name",
 						enquiry: 	   "Please enter enquiry",

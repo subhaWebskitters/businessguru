@@ -8,9 +8,10 @@
 <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
 <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>" />   
 <link href='http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
-
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
 <link type="text/css" rel="stylesheet" href="<?php echo e(URL::asset('front_assets/assets/style.css')); ?>">
 <link type="text/css" rel="stylesheet" href="<?php echo e(URL::asset('front_assets/assets/css/genericons.css')); ?>">
+<link type="text/css" rel="stylesheet" href="<?php echo e(URL::asset('front_assets/assets/css/jquery.multiselect.css')); ?>">
 <link rel="stylesheet" href="<?php echo e(URL::asset('front_assets/assets/css/jquery-ui.css')); ?>">
 
 
@@ -20,16 +21,29 @@
 <script type="text/javascript" src="<?php echo e(asset('admin_assets/js/custom_script.js')); ?>"></script>	
 <script type="text/javascript" src="<?php echo e(asset('admin_assets/js/jquery.validate.my-methods.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/functions.js')); ?>"></script>
-<script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/common.js')); ?>"></script>
-<script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/tinyscrollbar.js')); ?>"></script>
+
+
     
 <script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/owl.carousel.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/easyResponsiveTabs.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/waypoints.min.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/jquery-ui.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset('admin_assets/js/jquery.fancybox.js')); ?>"></script>
-<script  type="text/javascript" src="<?php echo e(asset('front_assets/ckeditor/ckeditor.js')); ?>"></script>
+<!--<script  type="text/javascript" src="<?php echo e(asset('front_assets/ckeditor/ckeditor.js')); ?>"></script>-->
+<script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/tinyscrollbar.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/common.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset('front_assets/assets/js/jquery.multiselect.js')); ?>"></script>
+    
+<!-- include libraries(jQuery, bootstrap) -->
 
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> 
+
+<!-- include summernote css/js-->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.1/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.1/summernote.js"></script>
+
+   
+  
 <link rel="stylesheet" type="text/css" href="<?php echo e(asset('admin_assets/css/fancybox/jquery.fancybox.css')); ?>" media="screen" />
 
 <script>
@@ -37,6 +51,35 @@
     var BASE_URL = '<?php echo e(URL::route('register')); ?>';
     var csrf_token = '<?php echo e(csrf_token()); ?>';
 </script>
+<!--Start of Zopim Live Chat Script-->
+
+    <script>
+    $(document).ready(function(){
+        $(document).on('click','.live_chat',function(){
+            if ($(".zopim").length >0 ){
+                $(".zopim:eq(1)").show();
+            }else{
+                 window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
+                 d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
+                 _.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute("charset","utf-8");
+                 $.src="//v2.zopim.com/?3ylk3F8iCWuUYTixpENO4iJqgRcImC4w";z.t=+new Date;$.
+                 type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
+                 $zopim(function(){
+                    window.setTimeout(function() {
+                    $zopim.livechat.window.show();
+                    }, 30000); //time in milliseconds
+                    });
+            }
+        })
+    });
+    $(document).on('click', function (e) {
+	if ($(e.target).parents('.live_chat').length == 0 ){
+	   $(".zopim").hide();
+	}
+	
+        });
+    </script>
+<!--End of Zopim Live Chat Script-->
 </head>
 <?php /**/
 $controller = Helpers::getRoute('controller');
@@ -45,151 +88,242 @@ $action = Helpers::getRoute('action');
 
 
 <body class="<?php if($controller =='RegisterController' && $action == 'index'): ?> home_page <?php endif; ?> dashboard">
-<?php if($controller =='CmsController' || $controller =='DiscoverController'): ?>
-    <div class="business_signin" style="display:none;">
-	<div id="scrollbar2">
-	  <div class="scrollbar"><div class="track"><div class="thumb"><div class="end"></div></div></div></div>
-	  <div class="viewport">
-	    <div class="overview">
-	      <div class="two_img_form" id="start_login">
-		<div class="login">
-		  <?php echo Form::open(['name'=> 'frmLogin', 'route'=>['business_login'],'id'=>'business_sign_in','class' => 'form form-validate frmLogin','enctype'=>'multipart/form-data']); ?>
 
-				<?php echo Form::hidden('action','Process',array('id'=>'hidval')); ?>
+    <?php if($controller =='CmsController' || $controller =='DiscoverController'): ?>
+    
+        <div class="business_signin" style="display:none;">
+            <div id="scrollbar2">
+                <div class="scrollbar">
+                    <div class="track">
+                        <div class="thumb">
+                            <div class="end"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="viewport">
+                    <div class="overview">
+                        <div class="two_img_form" id="start_login">
+                            <div class="login">
+                                <?php echo Form::open(['name'=> 'frmLogin', 'route'=>['business_login'],'id'=>'business_sign_in','class' => 'form form-validate frmLogin','enctype'=>'multipart/form-data']); ?>
 
-				<?php echo Form::hidden('type','Business',array('id'=>'type')); ?>
+                                    <?php echo Form::hidden('action','Process',array('id'=>'hidval')); ?>
 
-		    <h2>Log In</h2>
-		      <div id="errormsg" style="color:red;"></div>
-		    <div class="form_field clear">
-		      <label>Email Address</label>
-		     <input id="email1" placeholder="Email" class="form-control required" required="required" name="email" type="email" value="">
-		    </div>
-		    <div class="form_field clear">
-		      <label>Password</label>
-		      <input id="password1" placeholder="Password" class="form-control required" required="required" name="password" type="password" value="">
-		    </div>
-		      
-		    <div class="form_field clear">
-		      <input id="submit" type="submit" name="submit" value="Login">
-		    </div>
-		  <?php echo Form::close(); ?>	      
-		</div>
-		<div class="login sign_up">
-		  <?php echo Form::open(['route'=>'business_register','class' => 'form form-validate formRow','id'=>'business_form','enctype'=>'multipart/form-data', 'files'=>true]); ?>
+                                    <?php echo Form::hidden('type','Business',array('id'=>'type')); ?>
 
-<?php echo Form::hidden('action','Process',array('id'=>'action')); ?>
+                                    <h2>Log In</h2>
+                                    <div id="errormsg" style="color:red;"></div>
+                                    <div class="form_field clear">
+                                        <label>Email Address</label>
+                                        <input id="email1" placeholder="Email" class="form-control required" required="required" name="email" type="email" value="">
+                                    </div>
+                                    <div class="form_field clear">
+                                        <label>Password</label>
+                                        <input id="password1" placeholder="Password" class="form-control required" required="required" name="password" type="password" value="">
+                                    </div>
+                                    <div class="form_field clear">
+                                        <input id="submit" type="submit" name="submit" value="Login">
+                                    </div>
+                                <?php echo Form::close(); ?>	      
+                            </div>
+                           
+                            <div class="login sign_up">
+                                <?php echo Form::open(['route'=>'business_register','name'=> 'frmSignUpBusiness','class' => 'form form-validate formRow','id'=>'frmSignUpBusiness','enctype'=>'multipart/form-data', 'files'=>true]); ?>
 
-		    <h2>Sign Up</h2>
-		    <div class="form_field clear">
-		      <label>Email Address</label>
-		       <?php echo Form::email('email','',array('id'=>'email','placeholder'=>'Email','class'=>'form-control parsley-validated required','required' => 'required')); ?>
+                                    <?php echo Form::hidden('action','Process',array('id'=>'action')); ?>
 
-		       <span class="email_error error"></span>
-		    </div>
-		    <div class="form_field clear">
-		      <label>Password</label>
-		      <?php echo Form::password('password',array('id'=>'password','placeholder'=>'Password','class'=>'form-control parsley-validated required','required' => 'required')); ?>
+                                    <?php echo Form::hidden('type','Business',array('id'=>'type')); ?>
 
-		      <span class="pass_error error"></span>
-		    </div>
-		    <div class="form_field clear">
-		      <label>Confirm Password</label>
-		      <?php echo Form::password('password_confirmation',array('id'=>'password_confirmation','placeholder'=>'retype password','class'=>'form-control')); ?>
+                                    <h2>Sign Up</h2>
+                                    <div class="form_field clear">
+                                        <label>Email Address</label>
+                                        <?php echo Form::email('email_business','',array('id'=>'email_business','placeholder'=>'Email','autocomplete' => 'off','class'=>'form-control parsley-validated required','required' => 'required','minlength'=>'6')); ?>
 
-		    <span class="passconf_error error"></span>
-		    </div>
-		    <div class="form_field clear">
-		      <input type="submit" name="submit" value="Sign up">
-		    </div>
-		  <?php echo Form::close(); ?>      
-		</div>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	</div>  
+                                        <span class="email_error error"></span>
+                                    </div>
+                                    <div class="form_field clear">
+                                        <label>Password</label>
+                                        <?php echo Form::password('password_business',array('placeholder'=>'Password','class'=>'form-control parsley-validated required','autocomplete' => 'off','required' => 'required','minlength'=>'6')); ?>
+
+                                        <span class="pass_error error"></span>
+                                    </div>
+                                    <div class="form_field clear">
+                                        <label>Confirm Password</label>
+                                        <?php echo Form::password('password_confirmation_business',array('id'=>'password_confirmation_business', 'placeholder'=>'retype password','autocomplete' => 'off','class'=>'form-control')); ?>
+
+                                        <span class="passconf_error error"></span>
+                                    </div>
+                                    <div class="form_field clear">
+                                        <input type="submit" name="submit" value="Sign up">
+                                    </div>
+                                <?php echo Form::close(); ?>      
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
 
 	
-      <div class="invester_signin" style="display:none;">
-  	<div id="scrollbar1">
-	  <div class="scrollbar"><div class="track"><div class="thumb"><div class="end"></div></div></div></div>
-	  <div class="viewport">
-	    <div class="overview">
-	      <div class="two_img_form" id="investor_login">
-		<div class="login">
-		  <?php echo Form::open(['name'=> 'frmLogin', 'route'=>['investor_sign_in'],'id'=>'investor_sign_in','class' => 'form form-validate','enctype'=>'multipart/form-data']); ?>
+        <div class="invester_signin" style="display:none;">
+            <div id="scrollbar1">
+                <div class="scrollbar">
+                    <div class="track">
+                        <div class="thumb">
+                            <div class="end"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="viewport">
+                    <div class="overview">
+                        <div class="two_img_form" id="investor_login">
+                            <div class="login">
+                                <?php echo Form::open(['name'=> 'frmLogin', 'route'=>['investor_sign_in'],'id'=>'investor_sign_in','class' => 'form form-validate','enctype'=>'multipart/form-data']); ?>
 
-				<?php echo Form::hidden('action','Process',array('id'=>'hidval')); ?>
+                                    <?php echo Form::hidden('action','Process',array('id'=>'hidval')); ?>
 
-				<?php echo Form::hidden('type','Investor',array('id'=>'type')); ?>
+                                    <?php echo Form::hidden('type','Investor',array('id'=>'type')); ?>
 
-		    <h2>Log In</h2>
-		      <div id="errormsg" style="color:red;"></div>
-		    <div class="form_field clear">
-		      <label>Email Address</label>
-		      <input id="email1" placeholder="Email" class="form-control required" required="required" name="email" type="email" value="">
-		    </div>
-		    <div class="form_field clear">
-		      <label>Password</label>
-		      <input id="password1" placeholder="Password" class="form-control required" required="required" name="password" type="password" value="">
-		    </div>
-		    <div class="form_field clear">
-		      <input id="submit" type="submit" name="submit" value="Login">
-		    </div>
-		  <?php echo Form::close(); ?>	      
-		</div>
-		<div class="login sign_up">
-		  <?php echo Form::open(['name'=> 'frmLogin', 'route'=>['save_invester_step'],'id'=>'save_invester_step','class' => 'form form-validate','enctype'=>'multipart/form-data']); ?>
+                                    <h2>Log In</h2>
+                                    <div id="errormsg" style="color:red;"></div>
+                                    <div class="form_field clear">
+                                        <label>Email Address</label>
+                                        <input id="email1" placeholder="Email" class="form-control required" required="required" name="email" type="email" value="">
+                                    </div>
+                                    <div class="form_field clear">
+                                        <label>Password</label>
+                                        <input id="password1" placeholder="Password" class="form-control required" required="required" name="password" type="password" value="">
+                                    </div>
+                                    <div class="form_field clear">
+                                        <input id="submit" type="submit" name="submit" value="Login">
+                                    </div>
+                                <?php echo Form::close(); ?>	      
+                            </div>
+                                
+                            <div class="login sign_up">
+                                <?php echo Form::open(['name'=> 'frmSignUpInvestor', 'route'=>['save_invester_step'],'id'=>'frmSignUpInvestor','class' => 'form form-validate','enctype'=>'multipart/form-data']); ?>
 
-				<?php echo Form::hidden('action','Process',array('id'=>'hidval')); ?>
+                                    <?php echo Form::hidden('action','Process',array('id'=>'hidval')); ?>
 
-				<?php echo Form::hidden('type','Investor',array('id'=>'type')); ?>
+                                    <?php echo Form::hidden('type','Investor',array('id'=>'type')); ?>
 
-		    <h2>Sign Up</h2>
-		    <div class="form_field clear">
-		      <label>Email Address</label>
-		      <?php echo Form::email('email','',array('id'=>'email2','placeholder'=>'Email','class'=>'form-control parsley-validated required','required' => 'required')); ?>
+                                    <h2>Sign Up</h2>
+                                    <div class="form_field clear">
+                                        <label>Email Address</label>
+                                        <?php echo Form::email('email_investor','',array('id'=>'email_investor','placeholder'=>'Email','class'=>'form-control  required','autocomplete' => 'off')); ?>
 
-		      <span class="email_error error"></span>
-		    </div>
-		    <div class="form_field clear">
-		      <label>Password</label>
-		      <?php echo Form::password('password',array('id'=>'password2','placeholder'=>'Password','class'=>'form-control parsley-validated required','required' => 'required')); ?>
+                                        <span class="email_error error"></span>
+                                    </div>
+                                    <div class="form_field clear">
+                                        <label>Password</label>
+                                        <?php echo Form::password('password_investor',array('placeholder'=>'Password','class'=>'form-control required','autocomplete' => 'off')); ?>
 
-		      <span class="pass_error error"></span>
-		    </div>
-		    <div class="form_field clear">
-		      <label>Confirm Password</label>
-		      <?php echo Form::password('password_confirmation',array('id'=>'password_confirmation2','placeholder'=>'Retype Password','class'=>'form-control')); ?>
+                                        <span class="pass_error error"></span>
+                                    </div>
+                                    <div class="form_field clear">
+                                        <label>Confirm Password</label>
+                                        <?php echo Form::password('password_confirmation_investor', array('id'=>'password_confirmation_investor', 'placeholder'=>'Retype Password', 'class'=>'form-control required','autocomplete' => 'off')); ?>
 
-		      <span class="passconf_error error"></span>
-		    </div>
-		    <div class="form_field clear">
-		      <input type="submit" name="submit" value="Sign up">
-		    </div>
-		  <?php echo Form::close(); ?>	      
-		</div>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	 </div> 
-<?php endif; ?>
+                                        <span class="passconf_error error"></span>
+                                    </div>
+                                    <div class="form_field clear">
+                                        <input type="submit" name="submit" value="Sign up">
+                                    </div>
+                                <?php echo Form::close(); ?>	      
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    <?php endif; ?>
+
     <div class="wrapper">
-    <!-- header section------>  
-    <?php echo $__env->make('layout.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-    <!-- End header section------>
+        <!-- header section------>  
+        <?php echo $__env->make('layout.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <!-- End header section------>
     
-    <!-- Mid section------>
-    <?php echo $__env->yieldContent('content'); ?>
-    <!-- End mid section------>
+        <!-- Mid section------>
+        <?php echo $__env->yieldContent('content'); ?>
+        <!-- End mid section------>
     
-    <!-- footer section------>
-    <?php echo $__env->make('layout.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-    <!-- End footer section------>
+        <!-- footer section------>
+        <?php echo $__env->make('layout.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <!-- End footer section------>
     </div>    
 
+    <script>
+        var base_url_suffix	= '';
+				var base_url = location.protocol + '//' + location.host + '/' + base_url_suffix;
+        
+        $(function(){
+				
+						/* FOR INVESTOR SIGN UP VALIDATE */
+				
+						$('#frmSignUpInvestor').validate({
+								rules: {
+										password_investor: {
+										  required: true,
+										  minlength: 6
+										},
+										password_confirmation_investor: {
+												required: true,
+												equalTo: '[name="password_investor"]'
+										},
+										email_investor:{
+												remote: {
+												  url: base_url+'invester_email_unique',
+												  type: "post",
+												  data: {
+													email_investor: function() {
+													  return $( "#email_investor" ).val();
+													},'_token':csrf_token
+												  }
+												}
+										}
+								},
+								messages: {
+								email_investor	: {required:"Please enter a valid email address", remote: "Your email address is already exist"}
+								}
+						});
+						
+						/* FOR INVESTOR SIGN UP VALIDATE */
+						
+						
+						/* FOR BUSINESS SIGN UP VALIDATE */
+						
+						$('#frmSignUpBusiness').validate({
+								rules: {
+										password_business: {
+										  required: true,
+										  minlength: 6
+										},
+										password_confirmation_business: {
+												required: true,
+												equalTo: '[name="password_business"]'
+										},
+										email_business:{
+												remote: {
+												  url: base_url+'business_email_unique',
+												  type: "post",
+												  data: {
+													email_business: function() {
+													  return $( "#email_business" ).val();
+													},'_token':csrf_token
+												  }
+												}
+										}
+								},
+								messages: {
+								email_business	: {required:"Please enter a valid email address", remote: "Your email address is already exist"}
+								}
+						});
+						
+						/* FOR BUSINESS SIGN UP VALIDATE */
 
+				});
+
+    </script>
+    
+    
 </body>
 </html>

@@ -29,4 +29,13 @@ class investors extends Model implements AuthenticatableContract, CanResetPasswo
 		{
 		    return $this->hasMany('App\BusinessInterestMail','investor_id');
 		}
+		function get_investor_asCurrency()
+		{
+		    return $this->hasOne('App\Currencies','id','as_currency');
+		}
+		
+		function get_investor_wiCurrency()
+		{
+		    return $this->hasOne('App\Currencies','id','wi_currency');
+		}
 }

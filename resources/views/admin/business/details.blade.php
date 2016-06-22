@@ -44,7 +44,7 @@
 														</div>
 												</div>
 										
-												@if($details->user_type == 'Start Up' || $details->user_type == 'Businees Ideas Only')
+												
 														<div class="form-body pal">
 																<div class="form-group">
 																		<label class="col-md-3 control-label" for="inputName">Business Name</label>
@@ -73,9 +73,10 @@
 																		@endif
 																</div>
 														</div>
+						@if($details->user_type == 'Start Up'|| $details->user_type == 'Existing Business')
 														<div class="form-body pal">
 																<div class="form-group">
-																		<label class="col-md-3 control-label" for="inputName">ACTA Number</label>
+																		<label class="col-md-3 control-label" for="inputName">ACRA Number</label>
 																		<div class="col-md-9">
 																				<div class="input-icon right">
 																						{!! Form::text('acta_number',$details->acta_number,array('class'=>'form-control','readonly' ))!!}
@@ -93,6 +94,8 @@
 																		</div>
 																</div>
 														</div>
+														@endif
+										@if(isset($details->registered_address) && $details->registered_address != '')
 														<div class="form-body pal">
 																<div class="form-group">
 																		<label class="col-md-3 control-label" for="inputName">Address</label>
@@ -103,6 +106,7 @@
 																		</div>
 																</div>
 														</div>
+														@endif
 														<div class="form-body pal">
 																<div class="form-group">
 																		<label class="col-md-3 control-label" for="inputName">Business Logo</label>
@@ -116,17 +120,24 @@
 																				</div>
 																		</div>
 																</div>
-														</div>	
+														</div>
+																
+				@if(COUNT($details->business_details)>0)
 														<div class="form-body pal">
 																<div class="form-group">
-																		<label class="col-md-3 control-label" for="inputName">Director Name</label>
-																		<div class="col-md-9">
+																		<label class="col-md-3 control-label" for="inputName">Director Name</label>					
+			
+					<div class="col-md-9">
 																				<div class="input-icon right">
-																						{!! Form::text('name_of_director',$details->name_of_director,array('class'=>'form-control','readonly' ))!!}
+					@foreach($details->business_details as $v)																	{!! Form::text('name_of_director',$v->director_name,array('class'=>'form-control','readonly' ))!!}
+					@endforeach
 																				</div>
 																		</div>
+																		
 																</div>
 														</div>
+					@endif
+										@if($details->business_description != '')
 														<div class="form-body pal">
 																<div class="form-group">
 																		<label class="col-md-3 control-label" for="inputName">Description</label>
@@ -137,6 +148,7 @@
 																		</div>
 																</div>
 														</div>
+														@endif
 														<div class="form-body pal">
 																<div class="form-group">
 																		<label class="col-md-3 control-label" for="inputName">Documents</label>
@@ -162,9 +174,8 @@
 																		@endif
 																</div>
 														</div>
-												@endif
+												
 										
-										@if($details->user_type == 'Existing Business')
 										<div class="form-body pal">
 										<div class="form-group"><label class="col-md-3 control-label" for="inputName">Mobile Number</label>
 										<div class="col-md-9">
@@ -184,26 +195,7 @@
 										</div>
 										</div>
 										</div>	
-										
-										<div class="form-body pal">
-										<div class="form-group"><label class="col-md-3 control-label" for="inputName">ACTA Number</label>
-										<div class="col-md-9">
-										<div class="input-icon right">
-										{!! Form::text('acta_number',$details->acta_number,array('class'=>'form-control','readonly' ))!!}
-										</div>
-										</div>
-										</div>
-										</div>
-										
-										<div class="form-body pal">
-										<div class="form-group"><label class="col-md-3 control-label" for="inputName">Number of Year</label>
-										<div class="col-md-9">
-										<div class="input-icon right">
-										{!! Form::text('number_of_year',$details->number_of_year,array('class'=>'form-control','readonly' ))!!}
-										</div>
-										</div>
-										</div>
-										</div>
+										@if($details->registered_address != '')
 												<div class="form-body pal">
 														<div class="form-group">
 																<label class="col-md-3 control-label" for="inputName">Address</label>
@@ -214,67 +206,10 @@
 																</div>
 														</div>
 												</div>
-												<div class="form-body pal">
-														<div class="form-group">
-																<label class="col-md-3 control-label" for="inputName">Business Logo</label>
-																<div class="col-md-9">
-																		<div class="input-icon right">
-																				@if(file_exists(public_path().'/upload/attachment/'.$details->business_logo) && $details->business_logo != '')
-																						{!! Html::image(asset('upload/attachment/'.$details->business_logo),'',array('class'=>'img-responsive img-circle','width'=>'140'))!!}
-																				@else
-																						{!! Html::image(asset('upload/no-img.png'), 'no-img',array('class'=>'img-responsive img-circle','width'=>'100'))!!}
-																				@endif							    
-																		</div>
-																</div>
-														</div>
-												</div>	
-												<div class="form-body pal">
-														<div class="form-group">
-																<label class="col-md-3 control-label" for="inputName">Director Name</label>
-																<div class="col-md-9">
-																		<div class="input-icon right">
-																				{!! Form::text('name_of_director',$details->name_of_director,array('class'=>'form-control','readonly' ))!!}
-																		</div>
-																</div>
-														</div>
-												</div>
-												<div class="form-body pal">
-														<div class="form-group">
-																<label class="col-md-3 control-label" for="inputName">Description</label>
-																<div class="col-md-9">
-																		<div class="input-icon right">
-																				{!! Form::textarea('business_description',$details->business_description,array('class'=>'form-control','readonly' ))!!}
-																		</div>
-																</div>
-														</div>
-												</div>
+												
+											@endif	
+												
 										
-												<div class="form-body pal">
-														<div class="form-group">
-																<label class="col-md-3 control-label" for="inputName">Documents</label>
-																@if(COUNT($details->getDocumentList)>0)
-																<div class="col-md-9">		
-																		<ul>
-																				@foreach($details->getDocumentList as $v)
-																						<li>
-																								{{--{{$v->document_name}}--}}
-																								@if(file_exists(public_path().'/upload/attachment/'.$v->document_name))
-																										<a href="{{URL::route('download_business_file',$v->document_name)}}">
-																												{!! Html::image(asset('icon/'.Helpers::get_extension_icon($v->document_name)), 'Download', array('title'=>'Download '.Helpers::get_extension($v->document_name) ))!!}
-																										</a>
-																								@endif    
-																						</li>
-																				@endforeach
-																		</ul>
-																</div>
-																@else
-																		<div class="col-md-9">
-																				<div class="input-icon right">N/A</div>
-																		</div>    
-																@endif
-														</div>
-												</div>
-										@endif
 										
 										</div>
 								</div>
@@ -333,7 +268,7 @@
 						<div class="form-group"><label class="col-md-3 control-label" for="inputName">Selling Price</label>
 						<div class="col-md-9">
 						<div class="input-icon right">
-						{!! Form::text('funds_required',$details->getCurrency->country_currency_symbol.' '.$details->selling_price,array('class'=>'form-control','readonly' ))!!}
+						{!! Form::text('funds_required',$details->getspCurrency->country_currency_symbol.' '.$details->selling_price,array('class'=>'form-control','readonly' ))!!}
 						</div>
 						</div>
 						</div>
@@ -373,7 +308,7 @@
 						<div class="form-group"><label class="col-md-3 control-label" for="inputName">Sales Report</label>
 						<div class="col-md-9">
 						<div class="input-icon right">
-						@if(file_exists(public_path().'/upload/proposal/'.$details->sales_report_name) && $details->sales_report_name != '')
+						@if(file_exists(public_path().'/upload/sales_report/'.$details->sales_report_name) && $details->sales_report_name != '')
 						<a href="{{URL::route('download_sales_report',$details->sales_report_name)}}">{!! Html::image(asset('icon/'.Helpers::get_extension_icon($details->sales_report_name)),'Download',array('title'=>'Download '.Helpers::get_extension($details->sales_report_name) ))!!}</a>
 						@else
 						N/A

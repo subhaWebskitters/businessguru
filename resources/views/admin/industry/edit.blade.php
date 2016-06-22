@@ -3,6 +3,7 @@
 
 @section('content')
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
+     
         <div class="page-header pull-left">
             <div class="page-title">Edit</div>
         </div>
@@ -18,6 +19,14 @@
          
         </ol>
         <div class="clearfix"></div>
+            @if(count($errors)>0)
+                            @foreach($errors->all() as $error)
+                                <p class="text-red">{{$error}}</p>
+                            @endforeach
+                        @endif
+                        @if(Session::has('errMsg'))
+                        <p class="text-red">{{Session::get('errMsg')}}</p>
+                        @endif
     </div>
         
     <div class="page-content">
@@ -26,22 +35,15 @@
                 <div class="panel panel-yellow">
                     <div class="panel-heading">Industry Update</div>
                     <div class="panel-body pan industryview">                                    
-                        @if(count($errors)>0)
-                            @foreach($errors->all() as $error)
-                                <p class="text-red">{{$error}}</p>
-                            @endforeach
-                        @endif
-                        @if(Session::has('errMsg'))
-                        <p class="text-red">{{Session::get('errMsg')}}</p>
-                        @endif
-                        {{ Form::open(array('route'=>array('industry_edit',$id))) }}
-                            
+                       
+                        {!! Form::open(array('route'=>array('industry_edit',$id),'class'=>'form-validate')) !!}
                             <div class="form-body pal">
                                 <div class="form-group">
                                     <label for="sitesettings_lebel" class="col-md-3 control-label">Industry Name</label>
                                     <div class="col-md-9">
                                         <div class="input-icon right">
-                                            {{Form::text('industry_name',$industry_details['industry_name'],array('class'=>'form-control required'))}}
+                                            {{Form::text('industry_name',$industry_details['industry_name'],array('class'=>'form-control required','id'=>'industry_name'))}}
+                                            <span class="industry_name_error" style="color:red;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -73,4 +75,5 @@
             </div>
         </div>
     </div>
+
 @endsection

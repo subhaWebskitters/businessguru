@@ -158,7 +158,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
-        Aloha\Twilio\Support\Laravel\ServiceProvider::class       
+				Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
+				Aloha\Twilio\Support\Laravel\ServiceProvider::class       
         
     ],
 
@@ -212,6 +213,7 @@ return [
         'Image'     => Intervention\Image\Facades\Image::class,
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Twilio'    => Aloha\Twilio\Support\Laravel\Facade::class,        
+				'Chart'			=> Khill\Lavacharts\Laravel\LavachartsFacade::class,
 				'Input' 		=> Illuminate\Support\Facades\Input::class
     ],
 

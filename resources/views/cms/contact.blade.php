@@ -71,7 +71,7 @@
 	<div class="contact_right">
 	  {!! Form::open(['route'=>'contact_email','method'=>'post','class' => 'form form-validate formRow ','id'=>'contact_email','enctype'=>'multipart/form-data', 'files'=>true]) !!}
 {!! Form::hidden('action','Process',array('id'=>'action')) !!}
-	    {!! Form::text('first_name','',array('id'=>'first_name','placeholder'=>'First Name*','class'=>'form-control required error2','required' => 'required')) !!}
+	    {!! Form::text('first_name','',array('id'=>'first_name','placeholder'=>'Name*','class'=>'form-control required error2','required' => 'required')) !!}
 	    {!! Form::email('email','',array('id'=>'email','placeholder'=>'Email Address*','class'=>'form-control required error2','required' => 'required')) !!}
 	    <span class="email_error"></span>
 	    {!! Form::text('organisation_name','',array('id'=>'organisation_name','placeholder'=>'Organization Name*','class'=>'form-control required error2','required' => 'required')) !!}
@@ -91,7 +91,7 @@
     @if($investor_id == '' && $buss_id == '')
     <div class="block5">
       <div class="main_container center">
-	<div class="business">
+	<div class="business businessGetStarted">
 	  <h2>Get Started Now</h2>
 	  <ul>
 	    <li class="investors1"><a href="javascript:void(0);"><h2>Business Investors</h2><span>I want to invest</span></a></li>
@@ -125,7 +125,7 @@ $(document).ready(function(){
 
 				},
 				messages: {
-						first_name: 	   "Please enter First Name",
+						first_name: 	   "Please enter Name",
 						email: 		   "Please enter a valid email address",
 						organisation_name: "Please enter organisation_name",
 						enquiry: 	   "Please enter enquiry",

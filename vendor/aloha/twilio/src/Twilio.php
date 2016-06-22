@@ -27,6 +27,11 @@ class Twilio implements TwilioInterface
      * @var bool
      */
     protected $sslVerify;
+    
+    /**
+     * @var \Services_Twilio
+     */
+     protected $twilio;
 
     /**
      * @param string $token
@@ -84,7 +89,10 @@ class Twilio implements TwilioInterface
         $twilio = $this->getTwilio();
 
         if (is_callable($message)) {
-            $query = http_build_query(['Twiml' => $this->twiml($message)]);
+            $query = http_build_query([
+                'Twiml' => $this->twiml($message),
+            ]);
+
             $message = 'https://twimlets.com/echo?'.$query;
         }
 
@@ -94,20 +102,27 @@ class Twilio implements TwilioInterface
     /**
      * @return \Services_Twilio
      */
-    private function getTwilio()
+    public function getTwilio()
     {
+        if ($this->twilio) {
+            return $this->twilio;
+        }
+        
         if (!$this->sslVerify) {
             $http = new Services_Twilio_TinyHttp(
                 'https://api.twilio.com',
-                ['curlopts' => [
+                [
+                    'curlopts' => [
                         CURLOPT_SSL_VERIFYPEER => false,
                         CURLOPT_SSL_VERIFYHOST => 2,
                     ],
                 ]
             );
         }
+        
+        $this->twilio = new Services_Twilio($this->sid, $this->token, null, isset($http) ? $http : null);
 
-        return new Services_Twilio($this->sid, $this->token, null, isset($http) ? $http : null);
+        return $this->twilio;
     }
 
     /**
@@ -119,11 +134,11 @@ class Twilio implements TwilioInterface
     {
         $message = new Services_Twilio_Twiml();
 
-        if (is_callable($callback)) {
-            call_user_func($callback, $message);
-        } else {
+        if (!is_callable($callback)) {
             throw new InvalidArgumentException('Callback is not valid.');
         }
+
+        call_user_func($callback, $message);
 
         return (string) $message;
     }

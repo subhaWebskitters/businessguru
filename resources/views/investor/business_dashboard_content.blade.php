@@ -19,7 +19,7 @@
 						<div class="site-content">
 								<div class="entry-header">
 										<h3><a href="{{URL::route('business_details',$businessID)}}">{{$businessName}}</a></h3>
-										<span>By : {{$investorName}}</span>
+										<!--<span>By : {{$investorName}}</span>-->
 								</div>
 								<div class="entry-content">
 										<p>{{substr($businessDescription,0,80)."...."}}</p>
@@ -49,6 +49,4 @@
 						</div>
 				</article>
 		@endforeach
-@else
-		<div class="well" style="color:red">No Record Found</div>
 @endif

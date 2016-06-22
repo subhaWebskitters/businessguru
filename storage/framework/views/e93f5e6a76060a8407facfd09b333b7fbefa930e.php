@@ -72,7 +72,10 @@
 <script src="<?php echo e(asset('admin_assets/js/main.js')); ?>"></script>
 <script src="<?php echo e(asset('admin_assets/vendors/jquery-validate/jquery.validate.min.js')); ?>"></script>
 <script src="<?php echo e(asset('admin_assets/js/form-validation.js')); ?>"></script>
-<script> var BASE_URL = "<?php echo e(URL::to('/').'/admin'); ?>"; </script>   
+<script>
+var BASE_URL = "<?php echo e(URL::to('/').'/admin'); ?>";
+var CSRF_TOKEN = "<?php echo e(csrf_token()); ?>";
+</script>   
 <!--<script>
     var FRONT_URL = "<?php echo e(URL::to('/')); ?>";
     var BASE_URL = "<?php echo e(URL::to('/').'/admin'); ?>";

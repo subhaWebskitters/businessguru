@@ -3,17 +3,34 @@
 
   <div id="main" class="clear inv_details">
     <div class="main_container">
+    <a class="lmr" href="{{URL::route('investor_dashboard')}}">Back</a>
       <div class="inv_inner">
 	<h2>{{$businessDetails->business_name}}<!--<span>by {{$investor_name}} </span>--></h2>
 	<div class="deatils_outer clear">
 	  <div class="summary">
-	    <div class="border_box">
+	    <div class="border_box discoverDetailsBorder">
 	      <h3>Summary:</h3>
-	      <p>{{$businessDetails->business_description}}</p>
+	      <p>{!!$businessDetails->business_description!!}</p>
 	    </div>
-	    <div class="border_box upload_img clear">
-	      <h3>Video and Photo:</h3>
+	    <div class="border_box upload_img clear discoverDetailsBorder">
+	      <h3>Gallery</h3>
 		@if(count($business_files)>0)
+		<div class="owl_new1">
+		  <div id="owl-demoBusiness" class="owl-carousel owl">
+		    @foreach($business_files as $files)
+		      <div class="item">
+			@if (file_exists(public_path('upload/businessfiles/businessSliderThumb/'.$files->file_name))) 
+					<img src="{{ asset('/upload/businessfiles/businessSliderThumb/'.$files->file_name) }}" alt=""/>
+			@endif			
+		      </div>
+		    @endforeach
+		  </div>
+		</div>
+				 
+		@else
+			{{'No photo and video exists'}}
+		@endif
+		<!--@if(count($business_files)>0)
 		<ul>
 		@foreach($business_files as $files)
 			<li><a class="fancybox2" rel="group" href="{{ asset('upload/businessfiles/'.$files->file_name) }}" title="{{$files->file_name}}" >{{ Html::image(asset('upload/businessfiles/thumb/'.$files->file_name),$files->file_name) }}</a></li>
@@ -22,7 +39,7 @@
 		</ul>
 		@else
 			{{'No photo and video exists'}}
-		@endif
+		@endif -->
 		
 		<!--<form enctype="multipart/form-data" action="" method="post" class="putImages" id="formId">
 								<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -36,8 +53,14 @@
 		</form>-->
 	      
 	    </div>
-	    <div class="border_box upload_img clear">
+	      @if(isset($businessDetails->company_portfolio) && $businessDetails->company_portfolio!= '')
+	    <div class="border_box discoverDetailsBorder">
 	      <h3>Company Portfolio</h3>
+	      <p>{!!$businessDetails->company_portfolio!!}</p>
+	    </div>
+	    @endif
+	    <div class="border_box upload_img clear discoverDetailsBorder">
+	      <h3>View Portfolios Uploaded</h3>
 	      
 	        @if(COUNT($businessDetails->getDocumentList)>0)
 						<ul>
@@ -54,30 +77,30 @@
 							    @endif    
 							    
 						 @endforeach
-									    
+						</ul>			    
 				        @else
-				           N/A  
-				        @endif
-						</ul>
+				           N/A 
+						@endif
 	     
 	    </div>
-	    <div class="border_box directorsBioDiv">
+	      
+	    <div class="border_box directorsBioDiv discoverDetailsBorder list_full_bio">
 	      <h3>Director's BIO</h3>
 	      @if(COUNT($businessDetails->business_details)>0)
 						<ul>
 		
 						@foreach($businessDetails->business_details as $v)
 							   						
-									<li><span class="spanDirectorName">{{$v->director_name}}</span><p class="spanDirectorBio">{{$v->director_bio}}</p></li>
+									<li><span class="spanDirectorName">{{$v->director_name}}</span><p class="spanDirectorBio">{!!$v->director_bio!!}</p></li>
 							   
 						 @endforeach
-									    
+						</ul>			    
 				        @else
 				           N/A  
 				        @endif
-						</ul>
+						
 	    </div>
-	    <div class="border_box upload_img clear">
+	    <div class="border_box upload_img clear discoverDetailsBorder">
 	      <h3>Proposal</h3>
 	      <ul>@if(file_exists(public_path().'/upload/proposal/'.$businessDetails->proposal_name) && $businessDetails->proposal_name != '')
 	      <li>
@@ -95,7 +118,7 @@
 		<div class="want_to">
 		<div class="want_to_inner want_to_inner2">
 		  <img src="{{ asset('front_assets/assets/images/openlock.png') }}" class="lockProposal">
-		  <span class="propContent">We unlock your proposal within 24 hours</span>
+		  <span class="propContent">We will unlock your proposal within 24 hours</span>
 		</div>
 		</div>
 	      @elseif((isset($business_proposal->status) && $business_proposal->status == 'Declained') )
@@ -105,9 +128,11 @@
 		  <span class="blue propBlue">Want to view the proposal?</span>
 		  <span class="propContent">Register you interest and will contact <br> you within 24 hours</span>
 		  <span class="propError"></span>
-		  <a href="javascript:void(0);" class="sign_up1" id="buss_view_propal" data-item="{{($investor_details->email)}}" data-item1="{{($investor_name)}}" data-item2="{{$businessDetails->business_name}}" data-item3="{{$businessDetails->id}}">Register</a>
+		  <a href="javascript:void(0);" class="sign_up1" id="buss_view_propal" data-item="{{($investor_details->email)}}" data-item1="{{($investor_name)}}" data-item2="{{$businessDetails->business_name}}" data-item3="{{$businessDetails->id}}"  data-item4="{{$businessDetails->investor_type}}">Register</a>
 		</div>
 		</div>
+		@elseif((isset($business_proposal->status) && $business_proposal->status == 'Approval') )
+		<div></div>
 		@else
 		<div class="want_to">
 		<div class="want_to_inner want_to_inner2">
@@ -115,7 +140,7 @@
 		  <span class="blue propBlue">Want to view the proposal?</span>
 		  <span class="propContent">Register you interest and will contact <br> you within 24 hours</span>
 		  <span class="propError"></span>
-		  <a href="javascript:void(0);" class="sign_up1" id="buss_view_propal" data-item="{{($investor_details->email)}}" data-item1="{{($investor_name)}}" data-item2="{{$businessDetails->business_name}}" data-item3="{{$businessDetails->id}}">Register</a>
+		  <a href="javascript:void(0);" class="sign_up1" id="buss_view_propal" data-item="{{($investor_details->email)}}" data-item1="{{($investor_name)}}" data-item2="{{$businessDetails->business_name}}" data-item3="{{$businessDetails->id}}"   data-item4="{{$businessDetails->investor_type}}">Register</a>
 		</div>
 		</div>
 		@endif
@@ -123,26 +148,42 @@
 	    </div>
 	  </div>
 	  <div class="looking">
-	    <div class="border_box">
+		@if($chartResult != '')
+				<div id="chart-div" style="border: 1px solid #d1d1d1;margin: 0 0 10px 0; min-height: 200px;"></div>
+				@piechart('IMDB', 'chart-div')
+		@endif
+	    <div class="border_box ">
 	      <h3>Looking For</h3>
 	      <div class="selling">
 		<h4>Selling/Investment</h4>
 		<span class="line">{{$businessDetails->getspCurrency->country_currency_symbol}}{{$businessDetails->selling_price}}</span>
 		<span>{{$businessDetails->equity_exchange."%"}}</span>
 	      </div>
-	      <a href="javascript:void(0);" class="interest @if(count($businessDetails->get_business_interest_mail) > 0) disabled @endif" data-item="{{$businessDetails->id}}" data-item1="{{$businessDetails->business_name}}">I am Interested</a>
-		@if(count($businessDetails->get_business_interest_mail) > 0)
+		 <span class="investorType">
+		
+	       {{$businessDetails->investor_type}}
+	       
+	       </span>
+	      <a href="javascript:void(0);" class="interest" data-item="{{$businessDetails->id}}" data-item1="{{$businessDetails->business_name}}">I am Interested</a>
+		<span class="interestedContent" style="display:none;"></span>
+		<!--@if(count($businessDetails->get_business_interest_mail) > 0)
 		<span class="interestedContent">Your requested already been sent.We will get back to you within 24 hours</span>
 		@else
 		<span class="interestedContent" style="display:none;"></span>
-		@endif
+		@endif -->
 	      <a href="{{URL('getDownload')}}" class="download">Download sales report</a>
 	      
 	    </div>
 	    
-	    <div class="border_box">
+	    <div class="border_box ">
 	      <div class="company_name">
-		<div class="company_img">{{ Html::image(asset('upload/businessuser/'.$businessDetails->business_logo),$businessDetails->business_logo) }}</div>
+		<div class="company_img">
+		@if (!$businessDetails->business_logo)
+																														{{ Html::image(asset('upload/businessuser/thumb/311200.jpg')) }}
+																												@else
+																														{{ Html::image(asset('upload/businessuser/'.$businessDetails->business_logo),$businessDetails->business_logo) }}
+																												@endif
+		</div>
 		<span class="compBussName">{{$businessDetails->business_name}}</span>
 		<span>{{$businessDetails->acta_number}}</span>
 		<span>{{$businessDetails->number_of_year}} years</span>
@@ -151,9 +192,11 @@
 	      </div>
 
 	    </div>
+	      
 	  </div>
 	</div>
       </div>
+	<a class="lmr" href="{{URL::route('investor_dashboard')}}">Back</a>
     </div>
   </div>
 
@@ -182,21 +225,29 @@ $(".fancybox2").fancybox();
 						data: {buss_id:buss_id,buss_name:buss_name,_token: csrf_token},
 						url: base_url+'/contact_submit',
 						success: function(data){
-								if (data != 0){
+								if (data == 1){
+								
 								$('.interestedContent').css('display','block');
 								$('.interestedContent').html('We will get back to you within 24 hours');
-								$('.interest').addClass('disabled');
-								$('.interest').css('pointer-events','none');
+								setTimeout(function(){$('.interestedContent').css('display','none');}, 2000); 
+								//$('.interest').addClass('disabled');
+								//$('.interest').css('pointer-events','none');
 								}
 								else if (data == 2) {
+								
+								$('.interestedContent').html('Your request has already been sent.');
 								$('.interestedContent').css('display','block');
-								$('.interestedContent').html('Your request already been sent.');
-								$('.interest').addClass('disabled');
-								$('.interest').css('pointer-events','none');
+								
+								//$('.interest').addClass('disabled');
+								//$('.interest').css('pointer-events','none');
+								setTimeout(function(){$('.interestedContent').css('display','none');}, 2000); 
 								}
 								else
 								{
-								$('.interestedContent').html('Your request cannot be sent. Please check your email id');		
+								
+								$('.interestedContent').html('Your request cannot be sent. Please check your email id');
+								setTimeout(function(){$('.interestedContent').css('display','none');}, 2000); 
+								
 								}
 						}
 				}); 
@@ -249,20 +300,26 @@ $(".fancybox2").fancybox();
 				var name 	= $(this).attr('data-item1');
 				var buss_name 	= $(this).attr('data-item2');
 				var buss_id 	= $(this).attr('data-item3');
+				var investor_type 	= $(this).attr('data-item4');
 				var loc = base_url+'/front_assets/assets/images/openlock.png';
 				$.ajax({
 						type: 'post',
-						data: {email:email,name:name,buss_name:buss_name,buss_id:buss_id,_token: csrf_token},
+						data: {email:email,name:name,buss_name:buss_name,buss_id:buss_id,investor_type:investor_type,_token: csrf_token},
 						url: base_url+'/view_proposal_mail',
 						success: function(data){
-								if (data != 0){
+								if (data == 1){
 										$('.propBlue').html('');
-										$('.propContent').html('We unlock your proposal within 24 hours');
+										$('.propContent').html('We will unlock your proposal within 24 hours');
 										$('.lockProposal').attr("src",loc);
-										$('#buss_view_propal').html('');
+										$('#buss_view_propal').hide();
 								}
 								else if (data == 2) {
 										$('.propError').html('Your request already been sent.');
+								}
+								else if (data == 3) {
+										$('.propBlue').html('');
+										$('.propContent').html('We cannot send your proposal request. This is a single investors type business. One proposal request already been sent.');
+										$('#buss_view_propal').hide();
 								}
 								else
 								{
@@ -273,6 +330,24 @@ $(".fancybox2").fancybox();
 	});
 
 });
+
+
+    $(document).ready(function() {
+     
+      var owl = $("#owl-demoBusiness");
+     
+      owl.owlCarousel({
+          items : 3,
+	  center:true,
+	  loop:true,
+	  navigation:true,
+	  pagination: false,
+      });
+     
+     
+    });
+
+
 </script>
 
 <!--<script>

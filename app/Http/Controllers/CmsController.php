@@ -31,7 +31,7 @@ class CmsController extends Controller
     }
     
     public function contact_email(Request $request){
-        $data	                    = array();
+        $data= array();
        
        $sitesettings = Sitesettings::select('sitesettings_name','sitesettings_value')->where('id',1)->first();
         if($request->action == 'Process'){
@@ -75,7 +75,7 @@ class CmsController extends Controller
                                         $message->from($mail_config1['from_mail']);
                                         $message->to($mail_config1['to_mail']);
                                     });
-                                   return redirect::back()->with('successMessage', 'Your data has been saved successfully.');
+                                   return redirect::back()->with('successMessage', 'Thank you for your Request. We will contact you soon.');
                                      
                                    }
         }
@@ -83,11 +83,8 @@ class CmsController extends Controller
     }
 
 
-		public function sortingbyprice(Request $request)
-		{
-		    //echo "<pre>";
-		    //print_r($_REQUEST);
-		    //exit();
+		public function sortingbyprice(Request $request){
+		    
 				$data = array();
 				$min_price = $request->minprice;
 				$max_price = $request->maxprice;
@@ -135,10 +132,11 @@ class CmsController extends Controller
                                         ->join('business_users', 'business_industries.business_id', '=', 'business_users.id')
 																				->where(function($query) use ($data){
 																						if($data['search_text'] != ''){
-																								$query->where('business_name','LIKE','%'.$data['search_text'].'%')
-																								->whereBetween('selling_price', [$data['min_price'], $data['max_price']]);
+																								$query->where('business_name','LIKE','%'.$data['search_text'].'%');
 																						}
-																						
+																						if($data['min_price'] != '' && $data['max_price'] != ''){
+																								$query->whereBetween('selling_price',[$data['min_price'],$data['max_price']]);
+																						}
 																						if(count($data['industries_ids']) > 0){
 																								$query->whereIn('industries.id', $data['industries_ids']);
 																						}

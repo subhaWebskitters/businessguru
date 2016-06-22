@@ -30,7 +30,8 @@
     26 => 'App\\Providers\\EventServiceProvider',
     27 => 'App\\Providers\\RouteServiceProvider',
     28 => 'Zizaco\\Entrust\\EntrustServiceProvider',
-    29 => 'Aloha\\Twilio\\Support\\Laravel\\ServiceProvider',
+    29 => 'Khill\\Lavacharts\\Laravel\\LavachartsServiceProvider',
+    30 => 'Aloha\\Twilio\\Support\\Laravel\\ServiceProvider',
   ),
   'eager' => 
   array (
@@ -50,7 +51,8 @@
     13 => 'App\\Providers\\EventServiceProvider',
     14 => 'App\\Providers\\RouteServiceProvider',
     15 => 'Zizaco\\Entrust\\EntrustServiceProvider',
-    16 => 'Aloha\\Twilio\\Support\\Laravel\\ServiceProvider',
+    16 => 'Khill\\Lavacharts\\Laravel\\LavachartsServiceProvider',
+    17 => 'Aloha\\Twilio\\Support\\Laravel\\ServiceProvider',
   ),
   'deferred' => 
   array (

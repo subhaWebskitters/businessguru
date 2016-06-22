@@ -19,7 +19,7 @@ return [
                 |
                 */
 
-                'sid' => 'AC8e136d9be5f83373ac47603992312fe7',
+                'sid' => getenv('TWILIO_SID') ?: '',
 
                 /*
                 |--------------------------------------------------------------------------
@@ -30,7 +30,7 @@ return [
                 |
                 */
 
-                'token' => 'ea9e5a0fc3340fd1932c080f649ce79a',
+                'token' => getenv('TWILIO_TOKEN') ?: '',
 
                 /*
                 |--------------------------------------------------------------------------
@@ -41,20 +41,19 @@ return [
                 |
                 */
 
-                'from' => '+14155992671',
+                'from' => getenv('TWILIO_FROM') ?: '',
 
                 /*
                 |--------------------------------------------------------------------------
                 | Verify Twilio's SSL Certificates
                 |--------------------------------------------------------------------------
                 |
-                | Allows the client to bypass verifiying Twilio's SSL certificates.
+                | Allows the client to bypass verifying Twilio's SSL certificates.
                 | It is STRONGLY advised to leave this set to true for production environments.
                 |
                 */
 
                 'ssl_verify' => true,
-
             ],
         ],
     ],

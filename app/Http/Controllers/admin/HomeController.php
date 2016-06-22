@@ -93,8 +93,8 @@ class HomeController extends Controller
     
     public function dashboard(){
         
-        $data['investors']  = investors::count('id');
-        $data['business']   = Business::count();
+        $data['investors']  = investors::where('status','Active')->count('id');
+        $data['business']   = Business::where('status','Active')->count();
         
         return view('admin.dashboard',$data);
     }

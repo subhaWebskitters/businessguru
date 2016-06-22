@@ -111,11 +111,14 @@
 			  <div class="one_tab_inner">
 			    <div>
 				
-				{!! Form::file('image',array('id'=>'image','class'=>'form-control demoInputBox')) !!}
+				{!! Form::file('image', array('id'=>'image','class'=>'form-control demoInputBox')) !!}
 				<span id="file_error"></span>
-				<br>
-				<div class="image-display">
-				{{ Html::image(asset('upload/Investor/thumb/'.$investor_details->image),$investor_details->image,array()) }}
+				<div class="image-display" id="imageHolder">
+				  @if($investor_details->image != '' && file_exists(public_path().'/upload/Investor/thumb/'.$investor_details->image))
+				{{ Html::image(asset('upload/Investor/thumb/'.$investor_details->image),$investor_details->image) }}
+			    @else
+				{{ Html::image(asset('upload/no-img.png'),'no-img') }}
+			    @endif
 				</div>
 			    </div>
 				     

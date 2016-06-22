@@ -30,6 +30,9 @@
                 @if(Session::has('sucMsg'))
                     <p class="text-green">{{Session::get('sucMsg')}}</p>
                 @endif
+		@if(Session::has('errMsg'))
+                    <p class="text-red">{{Session::get('errMsg')}}</p>
+                @endif
                     {{Form::open(array('route'=>'industries_list','class'=>'form-validate','id'=>'searchForm') )}}
                         <div class="col-lg-3">
                            <div class="form-group">
@@ -74,7 +77,7 @@
                                                         edit 
                                                     </button>
                                                 </a>
-                                                <a title="delete" class="tablectrl_small bDefault tipS" href="#">
+                                                <a title="delete" onclick="return confirm('Are sure! Do you want to delete with its all relevent data?');" class="tablectrl_small bDefault tipS" href="{{URL::route('industry_delete',$industry['id'])}}">
                                                     <button class="btn btn-danger btn-xs" type="button"><i class="fa fa-trash-o"></i>&nbsp;
                                                         delete 
                                                     </button>
