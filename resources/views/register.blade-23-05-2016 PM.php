@@ -120,3 +120,11 @@ $(document).ready(function(){
 				</div>
     </div>
 </div>
+	
+<script>
+		$(document).ready(function(){
+				$(document).on('click','.business',function(){
+						alert("Test");
+				});		
+		});
+</script>	
